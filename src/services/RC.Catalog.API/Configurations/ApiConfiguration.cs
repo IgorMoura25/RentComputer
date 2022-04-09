@@ -5,14 +5,26 @@
         public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
+
+            services.RegisterServices();
+
+            services.AddSwaggerConfiguration();
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwaggerConfiguration();
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseHsts();
 
             app.UseEndpoints(endpoints =>
             {
