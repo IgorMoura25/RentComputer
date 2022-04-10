@@ -6,7 +6,7 @@
         {
             services.AddControllers();
 
-            services.RegisterServices();
+            services.RegisterServices(configuration);
 
             services.AddSwaggerConfiguration();
         }
