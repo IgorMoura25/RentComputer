@@ -8,9 +8,13 @@ namespace RC.Catalog.API.Domain
         public string Description { get; private set; }
         public decimal Value { get; private set; }
         public int Quantity { get; private set; }
-        public ProductImage Image { get; private set; }
+        public IEnumerable<ProductImage> Images { get; private set; }
         public bool IsActive { get; private set; }
         public DateTime CreatedAt { get; private set; }
+
+        protected Product()
+        {
+        }
 
         public Product(string name, string description, decimal value, int quantity)
         {

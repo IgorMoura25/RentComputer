@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\" />
-    <Folder Include="Migrations\Procedures\" />
+    <Folder Include="Application\Commands\" />
+    <Folder Include="Application\Events\" />
   </ItemGroup>
 
   <ItemGroup>

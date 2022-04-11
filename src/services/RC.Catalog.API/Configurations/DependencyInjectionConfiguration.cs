@@ -1,4 +1,6 @@
-﻿using RC.Catalog.API.Data;
+﻿using RC.Catalog.API.Application.Queries;
+using RC.Catalog.API.Data;
+using RC.Catalog.API.Data.Dapper;
 using RC.Catalog.API.Data.Repositories;
 using RC.Core.Data;
 
@@ -12,6 +14,8 @@ namespace RC.Catalog.API.Configurations
             services.AddTransient<IUnitOfWork, SqlServerUnitOfWork>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IDapperProcedureExecution, DapperProcedureExecution>();
+
+            services.AddScoped<IProductQueries, ProductQueries>();
         }
     }
 }

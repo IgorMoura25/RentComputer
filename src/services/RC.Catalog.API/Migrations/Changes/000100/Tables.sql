@@ -10,6 +10,23 @@
 			Quantity INT NOT NULL,
 			IsActive BIT NOT NULL,
 			CreatedAt DATETIME NOT NULL,
+			-- PK
 			CONSTRAINT PK_Products PRIMARY KEY NONCLUSTERED (ProductId, ProductGuid)
+		)
+	END
+
+IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ProductImages'))
+	BEGIN
+		CREATE TABLE ProductImages
+		(
+			ProductImageId BIGINT NOT NULL IDENTITY(1,1),
+			ProductImageGuid UNIQUEIDENTIFIER NOT NULL,
+			ProductId BIGINT NOT NULL,
+			ProductGuid UNIQUEIDENTIFIER NOT NULL,
+			Path VARCHAR(500) NOT NULL,
+			-- PK
+			CONSTRAINT PK_ProductImages PRIMARY KEY NONCLUSTERED (ProductImageId, ProductImageGuid),
+			-- FK's
+			CONSTRAINT FK_ProductImages_Products FOREIGN KEY (ProductId, ProductGuid) REFERENCES Products (ProductId, ProductGuid)
 		)
 	END
