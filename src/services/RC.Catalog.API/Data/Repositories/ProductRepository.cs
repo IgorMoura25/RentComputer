@@ -1,5 +1,5 @@
-﻿using Dapper;
-using RC.Catalog.API.Data.Dapper;
+﻿using RC.Catalog.API.Data.Dapper;
+using RC.Catalog.API.Data.DTO;
 using RC.Catalog.API.Domain;
 
 namespace RC.Catalog.API.Data.Repositories
@@ -18,9 +18,28 @@ namespace RC.Catalog.API.Data.Repositories
             return _dapperProcedureExecution.ExecuteListProcedure<Product>("RC_LST_Products", new ListProcedureDTO() { Offset = 0, Count = long.MaxValue }, CommandTimeout);
         }
 
-        public Product Add(string model)
+        public Product GetByName(string name)
         {
-            return _dapperProcedureExecution.ExecuteAddProcedure<Product>("EXE_TESTE", CommandTimeout);
+            return _dapperProcedureExecution.ExecuteGetProcedure<Product, GetProductByNameDTO>("RC_GET_ProductByName", new GetProductByNameDTO() { Name = name }, CommandTimeout);
+        }
+
+        public Product Add(Product product)
+        {
+            return _dapperProcedureExecution
+                .ExecuteAddProcedure<Product, AddProductDTO>
+                (
+                    "RC_ADD_Product",
+                    new AddProductDTO()
+                    {
+                        Name = product.Name,
+                        Description = product.Description,
+                        Value = product.Value,
+                        Quantity = product.Quantity,
+                        IsActive = product.IsActive,
+                        CreatedAt = product.CreatedAt
+                    },
+                    CommandTimeout
+                );
         }
 
         public void Dispose()

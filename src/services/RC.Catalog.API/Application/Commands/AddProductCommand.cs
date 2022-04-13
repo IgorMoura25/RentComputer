@@ -1,4 +1,5 @@
-﻿using RC.Core.Messages;
+﻿using FluentValidation;
+using RC.Core.Messages;
 
 namespace RC.Catalog.API.Application.Commands
 {
@@ -18,6 +19,35 @@ namespace RC.Catalog.API.Application.Commands
             Description = description;
             Value = value;
             Quantity = quantity;
+        }
+
+        public override bool IsValid()
+        {
+            var validationResult = new AddProductCommandValidation().Validate(this);
+            return validationResult.IsValid;
+        }
+    }
+
+    public class AddProductCommandValidation : AbstractValidator<AddProductCommand>
+    {
+        public AddProductCommandValidation()
+        {
+            RuleFor(product => product.Name)
+                .NotEmpty()
+                .WithMessage("The name of the product was not supplied");
+
+            RuleFor(product => product.Value)
+               .GreaterThan(0)
+               .WithMessage("The value of the product must be greater than zero");
+
+            RuleFor(product => product.Quantity)
+               .Must(HasValidQuantity)
+               .WithMessage("The quantity of the product must be greater than zero");
+        }
+
+        public bool HasValidQuantity(int quantity)
+        {
+            return quantity > 0;
         }
     }
 }

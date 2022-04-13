@@ -21,7 +21,7 @@ namespace RC.Catalog.API.Data.Dapper
                     commandTimeout: commandTimeout,
                     transaction: _session.Transaction);
 
-            return procedureResult?.ToList();
+            return procedureResult;
         }
 
         public IEnumerable<T> ExecuteListProcedure<T>(string procedureName, int? commandTimeout = null)
@@ -32,7 +32,30 @@ namespace RC.Catalog.API.Data.Dapper
                     commandTimeout: commandTimeout,
                     transaction: _session.Transaction);
 
-            return procedureResult?.ToList();
+            return procedureResult;
+        }
+
+        public T1 ExecuteGetProcedure<T1, T2>(string procedureName, T2? procedureParameter = null, int? commandTimeout = null) where T2 : class
+        {
+            var procedureResult = _session.Connection.QuerySingleOrDefault<T1>(
+                procedureName,
+                param: procedureParameter,
+                commandType: System.Data.CommandType.StoredProcedure,
+                commandTimeout: commandTimeout,
+                transaction: _session.Transaction);
+
+            return procedureResult;
+        }
+
+        public T ExecuteGetProcedure<T>(string procedureName, int? commandTimeout = null)
+        {
+            var procedureResult = _session.Connection.QuerySingleOrDefault<T>(
+                procedureName,
+                commandType: System.Data.CommandType.StoredProcedure,
+                commandTimeout: commandTimeout,
+                transaction: _session.Transaction);
+
+            return procedureResult;
         }
 
         public T1 ExecuteAddProcedure<T1, T2>(string procedureName, T2? procedureParameter = null, int? commandTimeout = null) where T2 : class
