@@ -13,7 +13,7 @@ namespace RC.Core.Mediator
             _mediator = mediator;
         }
 
-        public async Task PublishEventAsync<T>(T eventToPublish) where T : Event
+        public async Task PublishEventAsync<T>(T eventToPublish) where T : MediatREvent
         {
             await _mediator.Publish(eventToPublish);
         }

@@ -10,13 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Application\Events\**" />
     <Compile Remove="Models\**" />
-    <Content Remove="Application\Events\**" />
     <Content Remove="Models\**" />
-    <EmbeddedResource Remove="Application\Events\**" />
     <EmbeddedResource Remove="Models\**" />
-    <None Remove="Application\Events\**" />
     <None Remove="Models\**" />
   </ItemGroup>
 

@@ -1,37 +1,42 @@
 ﻿using RC.Core.Data;
+using RC.Core.Mediator;
 
 namespace RC.Catalog.API.Data
 {
     public sealed class SqlServerUnitOfWork : IUnitOfWork
     {
         private readonly IDbSession _session;
+        private readonly MediatREventList _eventList;
 
-        public SqlServerUnitOfWork(IDbSession session)
+        public SqlServerUnitOfWork(IDbSession session, MediatREventList eventList)
         {
             _session = session;
+            _eventList = eventList;
         }
 
-        public Task<bool> BeginTransaction()
+        public async Task<bool> BeginTransaction()
         {
             _session.Transaction = _session.Connection.BeginTransaction();
 
-            return Task.FromResult(true);
+            return true;
         }
 
-        public Task<bool> Commit()
+        public async Task<bool> Commit()
         {
             _session.Transaction.Commit();
             Dispose();
 
-            return Task.FromResult(true);
+            await _eventList.PublishEventsAsync();
+
+            return true;
         }
 
-        public Task<bool> Rollback()
+        public async Task<bool> Rollback()
         {
             _session.Transaction.Rollback();
             Dispose();
 
-            return Task.FromResult(true);
+            return true;
         }
 
         public void Dispose() => _session.Transaction?.Dispose();

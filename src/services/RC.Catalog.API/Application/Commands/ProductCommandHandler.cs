@@ -1,21 +1,25 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using RC.Catalog.API.Application.Events;
 using RC.Catalog.API.Data.Repositories;
 using RC.Catalog.API.Domain;
 using RC.Core.Data;
+using RC.Core.Mediator;
 using RC.Core.Messages;
 
 namespace RC.Catalog.API.Application.Commands
 {
     public class ProductCommandHandler : CommandHandler, IRequestHandler<AddProductCommand, ValidationResult>
     {
-        private IProductRepository _productRepository { get; }
-        private IUnitOfWork _unitOfWork { get; }
+        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly MediatREventList _eventList;
 
-        public ProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
+        public ProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork, MediatREventList eventList)
         {
             _productRepository = productRepository;
             _unitOfWork = unitOfWork;
+            _eventList = eventList;
         }
 
         public async Task<ValidationResult> Handle(AddProductCommand request, CancellationToken cancellationToken)
@@ -39,7 +43,9 @@ namespace RC.Catalog.API.Application.Commands
 
             try
             {
-                _productRepository.Add(product);
+                product = _productRepository.Add(product);
+
+                _eventList.AddEvent(new ProductAddedEvent(product.Id, product.Name, product.Description, product.Value, product.Quantity));
 
                 await _unitOfWork.Commit();
             }

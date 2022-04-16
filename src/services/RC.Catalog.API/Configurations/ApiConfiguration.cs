@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace RC.Catalog.API.Configurations
+﻿namespace RC.Catalog.API.Configurations
 {
     public static class ApiConfiguration
     {
@@ -10,9 +8,9 @@ namespace RC.Catalog.API.Configurations
 
             services.RegisterServices(configuration);
 
-            services.AddSwaggerConfiguration();
+            services.RegisterMediatR();
 
-            services.AddMediatR(typeof(Program));
+            services.AddSwaggerConfiguration();
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RC.Catalog.API.Application.Commands;
+using RC.Catalog.API.Application.Events;
 using RC.Catalog.API.Application.Queries;
 using RC.Core.Mediator;
 

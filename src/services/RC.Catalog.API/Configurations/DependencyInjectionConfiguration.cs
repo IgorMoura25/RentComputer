@@ -1,12 +1,8 @@
-﻿using FluentValidation.Results;
-using MediatR;
-using RC.Catalog.API.Application.Commands;
-using RC.Catalog.API.Application.Queries;
+﻿using RC.Catalog.API.Application.Queries;
 using RC.Catalog.API.Data;
 using RC.Catalog.API.Data.Dapper;
 using RC.Catalog.API.Data.Repositories;
 using RC.Core.Data;
-using RC.Core.Mediator;
 
 namespace RC.Catalog.API.Configurations
 {
@@ -20,9 +16,6 @@ namespace RC.Catalog.API.Configurations
             services.AddScoped<IDapperProcedureExecution, DapperProcedureExecution>();
 
             services.AddScoped<IProductQueries, ProductQueries>();
-
-            services.AddScoped<IMediatRHandler, MediatRHandler>();
-            services.AddScoped<IRequestHandler<AddProductCommand, ValidationResult>, ProductCommandHandler>();
         }
     }
 }
