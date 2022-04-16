@@ -26,11 +26,12 @@ namespace RC.Catalog.API.Data.Repositories
         public Product Add(Product product)
         {
             return _dapperProcedureExecution
-                .ExecuteAddProcedure<Product, AddProductDTO>
+                .ExecuteAddProcedure<Product>
                 (
                     "RC_ADD_Product",
                     new AddProductDTO()
                     {
+                        UniversalId = product.UniversalId,
                         Name = product.Name,
                         Description = product.Description,
                         Value = product.Value,

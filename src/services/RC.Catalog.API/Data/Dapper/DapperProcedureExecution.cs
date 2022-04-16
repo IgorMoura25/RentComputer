@@ -24,17 +24,6 @@ namespace RC.Catalog.API.Data.Dapper
             return procedureResult;
         }
 
-        public IEnumerable<T> ExecuteListProcedure<T>(string procedureName, int? commandTimeout = null)
-        {
-            var procedureResult = _session.Connection.Query<T>(
-                    procedureName,
-                    commandType: System.Data.CommandType.StoredProcedure,
-                    commandTimeout: commandTimeout,
-                    transaction: _session.Transaction);
-
-            return procedureResult;
-        }
-
         public T1 ExecuteGetProcedure<T1, T2>(string procedureName, T2? procedureParameter = null, int? commandTimeout = null) where T2 : class
         {
             var procedureResult = _session.Connection.QuerySingleOrDefault<T1>(
@@ -58,22 +47,11 @@ namespace RC.Catalog.API.Data.Dapper
             return procedureResult;
         }
 
-        public T1 ExecuteAddProcedure<T1, T2>(string procedureName, T2? procedureParameter = null, int? commandTimeout = null) where T2 : class
+        public T1 ExecuteAddProcedure<T1>(string procedureName, AddProcedureDTO procedureParameter, int? commandTimeout = null)
         {
             var procedureResult = _session.Connection.QuerySingle<T1>(
                 procedureName,
                 param: procedureParameter,
-                commandType: System.Data.CommandType.StoredProcedure,
-                commandTimeout: commandTimeout,
-                transaction: _session.Transaction);
-
-            return procedureResult;
-        }
-
-        public T ExecuteAddProcedure<T>(string procedureName, int? commandTimeout = null)
-        {
-            var procedureResult = _session.Connection.QuerySingle<T>(
-                procedureName,
                 commandType: System.Data.CommandType.StoredProcedure,
                 commandTimeout: commandTimeout,
                 transaction: _session.Transaction);

@@ -4,7 +4,7 @@ using RC.Core.Messages;
 
 namespace RC.Core.Mediator
 {
-    public class MediatRHandler
+    public class MediatRHandler : IMediatRHandler
     {
         private readonly IMediator _mediator;
 

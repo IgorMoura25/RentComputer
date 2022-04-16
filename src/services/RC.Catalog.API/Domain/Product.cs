@@ -24,6 +24,7 @@ namespace RC.Catalog.API.Domain
             Value = value;
             Quantity = quantity;
             IsActive = true;
+            CreatedAt = DateTime.UtcNow;
 
             Validate();
         }

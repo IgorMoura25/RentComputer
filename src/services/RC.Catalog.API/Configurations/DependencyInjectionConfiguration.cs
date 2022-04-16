@@ -21,7 +21,7 @@ namespace RC.Catalog.API.Configurations
 
             services.AddScoped<IProductQueries, ProductQueries>();
 
-            services.AddScoped<MediatRHandler>();
+            services.AddScoped<IMediatRHandler, MediatRHandler>();
             services.AddScoped<IRequestHandler<AddProductCommand, ValidationResult>, ProductCommandHandler>();
         }
     }
