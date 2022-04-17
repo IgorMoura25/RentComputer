@@ -56,7 +56,7 @@ namespace RC.Catalog.API.Application.Commands
                 return ValidationResult;
             }
 
-            return request.ValidationResult;
+            return ValidationResult;
         }
     }
 }

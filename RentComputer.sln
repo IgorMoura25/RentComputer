@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.Catalog.API", "src\servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.Core", "src\building-blocks\RC.Core\RC.Core.csproj", "{A1B97A37-B8F6-40DC-BB75-EC1167F11600}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.WebAPI.Core", "src\building-blocks\RC.WebAPI.Core\RC.WebAPI.Core.csproj", "{B1E665F9-6556-40B2-A570-08E451160DC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{A1B97A37-B8F6-40DC-BB75-EC1167F11600}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B97A37-B8F6-40DC-BB75-EC1167F11600}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1B97A37-B8F6-40DC-BB75-EC1167F11600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1E665F9-6556-40B2-A570-08E451160DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1E665F9-6556-40B2-A570-08E451160DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1E665F9-6556-40B2-A570-08E451160DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1E665F9-6556-40B2-A570-08E451160DC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{2806768F-E744-4BD8-A320-C5BA776B1B38} = {A57EA417-FDF9-4BD4-82D5-2866EA93A040}
 		{F70BFA05-A0FD-4553-8031-E782E482654E} = {2806768F-E744-4BD8-A320-C5BA776B1B38}
 		{A1B97A37-B8F6-40DC-BB75-EC1167F11600} = {AE90AD22-4F1C-4EA1-BEDE-3B8550439C37}
+		{B1E665F9-6556-40B2-A570-08E451160DC0} = {AE90AD22-4F1C-4EA1-BEDE-3B8550439C37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67D0F7FF-9E3E-4888-99FB-BEC2481353FE}

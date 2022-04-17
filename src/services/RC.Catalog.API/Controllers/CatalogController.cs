@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RC.Catalog.API.Application.Commands;
-using RC.Catalog.API.Application.Events;
 using RC.Catalog.API.Application.Queries;
 using RC.Core.Mediator;
+using RC.WebAPI.Core;
+using System.Net;
 
 namespace RC.Catalog.API.Controllers
 {
-    [ApiController]
     [Route("catalog")]
-    public class CatalogController : ControllerBase
+    public class CatalogController : MainController
     {
         private readonly IProductQueries _productQueries;
         private readonly IMediatRHandler _mediator;
@@ -23,16 +23,16 @@ namespace RC.Catalog.API.Controllers
         [Route("products")]
         public ActionResult ListProducts()
         {
-            return Ok(_productQueries.GetAll());
+            return CustomResponse(_productQueries.GetAll());
         }
 
         [HttpPost]
         [Route("product")]
-        public ActionResult AddProduct()
+        public async Task<IActionResult> AddProductAsync()
         {
-            var result = _mediator.SendCommandAsync(new AddProductCommand(0, "Produto 1", "Descrição produto 1", 25.53m, 3));
+            var result = await _mediator.SendCommandAsync(new AddProductCommand(0, "Produto 1", "Descrição produto 1", 25.53m, 3));
 
-            return Ok(result);
+            return CustomResponse(result, HttpStatusCode.Created);
         }
     }
 }

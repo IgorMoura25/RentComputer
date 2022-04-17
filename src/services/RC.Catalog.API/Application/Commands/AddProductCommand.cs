@@ -23,8 +23,8 @@ namespace RC.Catalog.API.Application.Commands
 
         public override bool IsValid()
         {
-            var validationResult = new AddProductCommandValidation().Validate(this);
-            return validationResult.IsValid;
+            ValidationResult = new AddProductCommandValidation().Validate(this);
+            return ValidationResult.IsValid;
         }
     }
 
