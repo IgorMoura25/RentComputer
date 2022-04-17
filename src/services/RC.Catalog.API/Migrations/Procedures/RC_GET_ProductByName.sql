@@ -5,8 +5,8 @@
 AS
 BEGIN
 	SELECT TOP 1
-		Products.ProductId,
-		Products.ProductGuid,
+		Products.ProductId 'Id',
+		Products.ProductGuid 'UniversalId',
 		Products.Name,
 		Products.Description,
 		Products.Value,

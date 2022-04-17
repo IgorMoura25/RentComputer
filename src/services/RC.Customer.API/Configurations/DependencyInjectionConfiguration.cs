@@ -1,10 +1,10 @@
-﻿using RC.Catalog.API.Application.Queries;
-using RC.Catalog.API.Data;
-using RC.Catalog.API.Data.Repositories;
-using RC.Core.Data;
+﻿using RC.Core.Data;
 using RC.Core.Data.Dapper;
+using RC.Customer.API.Application.Queries;
+using RC.Customer.API.Data;
+using RC.Customer.API.Data.Repositories;
 
-namespace RC.Catalog.API.Configurations
+namespace RC.Customer.API.Configurations
 {
     public static class DependencyInjectionConfiguration
     {
@@ -12,10 +12,10 @@ namespace RC.Catalog.API.Configurations
         {
             services.AddScoped<IDbSession>(service => new SqlServerDbSession(configuration.GetConnectionString("SqlServer")));
             services.AddTransient<IUnitOfWork, SqlServerUnitOfWork>();
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IDapperProcedureExecution, DapperProcedureExecution>();
 
-            services.AddScoped<IProductQueries, ProductQueries>();
+            services.AddScoped<ICustomerQueries, CustomerQueries>();
         }
     }
 }

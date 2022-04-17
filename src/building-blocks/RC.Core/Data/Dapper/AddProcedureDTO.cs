@@ -1,4 +1,4 @@
-﻿namespace RC.Catalog.API.Data.Dapper
+﻿namespace RC.Core.Data.Dapper
 {
     public class AddProcedureDTO
     {

@@ -1,7 +1,6 @@
 ﻿using Dapper;
-using RC.Catalog.API.Data.Dapper;
 
-namespace RC.Catalog.API.Data.Repositories
+namespace RC.Core.Data.Dapper
 {
     public abstract class DapperRepository
     {
@@ -14,7 +13,7 @@ namespace RC.Catalog.API.Data.Repositories
 
         protected virtual void AddCustomTypeHandler<T>()
         {
-            SqlMapper.AddTypeHandler<T>(new CustomTypeHandler<T>());
+            SqlMapper.AddTypeHandler(new CustomTypeHandler<T>());
         }
 
         public abstract void AddCustomTypeHandlersBaseCall();

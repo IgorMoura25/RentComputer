@@ -2,7 +2,7 @@
 using System.Data;
 using System.Text.Json;
 
-namespace RC.Catalog.API.Data.Dapper
+namespace RC.Core.Data.Dapper
 {
     public class CustomTypeHandler<T> : SqlMapper.TypeHandler<T>
     {

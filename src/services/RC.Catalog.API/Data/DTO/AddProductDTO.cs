@@ -1,4 +1,4 @@
-﻿using RC.Catalog.API.Data.Dapper;
+﻿using RC.Core.Data.Dapper;
 
 namespace RC.Catalog.API.Data.DTO
 {
