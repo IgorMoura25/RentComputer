@@ -20,7 +20,6 @@ namespace RC.Catalog.API.Data.Repositories
         public async Task<IEnumerable<ProductDTO>> GetAllAsync()
         {
             return await _productsCollection.Find(x => true).ToListAsync();
-
         }
 
         public async Task<ProductDTO?> GetByNameAsync(string name)
