@@ -10,10 +10,11 @@ namespace RC.Catalog.API.Configurations
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IDbSession>(service => new SqlServerDbSession(configuration.GetConnectionString("SqlServer")));
+            services.AddScoped<IDbSession>(service => new SqlServerDbSession(configuration.GetSection("DataBaseSettings:WriteConnectionString").Value));
             services.AddTransient<IUnitOfWork, SqlServerUnitOfWork>();
-            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IDapperProcedureExecution, DapperProcedureExecution>();
+            services.AddScoped<IProductCommandRepository, ProductCommandRepository>();
+            services.AddScoped<IProductQueryRepository, ProductQueryRepository>();
 
             services.AddScoped<IProductQueries, ProductQueries>();
         }

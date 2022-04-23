@@ -11,11 +11,11 @@ namespace RC.Catalog.API.Application.Commands
 {
     public class ProductCommandHandler : CommandHandler, IRequestHandler<AddProductCommand, ValidationResult>
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductCommandRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly MediatREventList _eventList;
 
-        public ProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork, MediatREventList eventList)
+        public ProductCommandHandler(IProductCommandRepository productRepository, IUnitOfWork unitOfWork, MediatREventList eventList)
         {
             _productRepository = productRepository;
             _unitOfWork = unitOfWork;
@@ -31,9 +31,11 @@ namespace RC.Catalog.API.Application.Commands
 
             var product = new Product(request.Name, request.Description, request.Value, request.Quantity);
 
-            var storedProduct = _productRepository.GetByName(product.Name);
+            // TODO: Get from SQL Server (Write database) using command repository using Entity Framework!!!
+            // var storedProduct = await _productQueryRepository.GetByNameAsync(product.Name);
 
-            if (storedProduct != null)
+            if (false)
+            //if (storedProduct != null)
             {
                 AddError("Product already exists");
                 return ValidationResult;

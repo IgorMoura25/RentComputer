@@ -1,9 +1,9 @@
-﻿using RC.Catalog.API.Application.DTO;
+﻿using RC.Catalog.API.Data.DTO;
 
 namespace RC.Catalog.API.Application.Queries
 {
     public interface IProductQueries
     {
-        IEnumerable<ProductDTO> GetAll();
+        public Task<IEnumerable<ProductDTO>> GetAllAsync();
     }
 }

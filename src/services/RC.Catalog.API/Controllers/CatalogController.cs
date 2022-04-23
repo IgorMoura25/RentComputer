@@ -21,9 +21,9 @@ namespace RC.Catalog.API.Controllers
 
         [HttpGet]
         [Route("products")]
-        public ActionResult ListProducts()
+        public async Task<ActionResult> ListProductsAsync()
         {
-            return CustomResponse(_productQueries.GetAll());
+            return CustomResponse(await _productQueries.GetAllAsync());
         }
 
         [HttpPost]

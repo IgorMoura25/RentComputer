@@ -1,22 +1,20 @@
-﻿using RC.Catalog.API.Application.DTO;
+﻿using RC.Catalog.API.Data.DTO;
 using RC.Catalog.API.Data.Repositories;
 
 namespace RC.Catalog.API.Application.Queries
 {
     public class ProductQueries : IProductQueries
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductQueryRepository _productRepository;
 
-        public ProductQueries(IProductRepository productRepository)
+        public ProductQueries(IProductQueryRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public IEnumerable<ProductDTO> GetAll()
+        public async Task<IEnumerable<ProductDTO>> GetAllAsync()
         {
-            var productList = _productRepository.GetAll();
-
-            return productList.Select(ProductDTO.ToProductDTO);
+            return await _productRepository.GetAllAsync();
         }
     }
 }

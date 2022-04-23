@@ -6,6 +6,8 @@
         {
             services.AddControllers();
 
+            services.Configure<DataBaseSettings>(configuration.GetSection("DataBaseSettings"));
+
             services.RegisterServices(configuration);
 
             services.RegisterMediatR();
