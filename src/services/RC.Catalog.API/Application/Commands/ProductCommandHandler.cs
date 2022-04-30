@@ -3,7 +3,6 @@ using MediatR;
 using RC.Catalog.API.Application.Events;
 using RC.Catalog.API.Data.Repositories;
 using RC.Catalog.API.Domain;
-using RC.Core.Data;
 using RC.Core.Mediator;
 using RC.Core.Messages;
 
@@ -12,13 +11,11 @@ namespace RC.Catalog.API.Application.Commands
     public class ProductCommandHandler : CommandHandler, IRequestHandler<AddProductCommand, ValidationResult>
     {
         private readonly IProductCommandRepository _productRepository;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly MediatREventList _eventList;
 
-        public ProductCommandHandler(IProductCommandRepository productRepository, IUnitOfWork unitOfWork, MediatREventList eventList)
+        public ProductCommandHandler(IProductCommandRepository productRepository, MediatREventList eventList)
         {
             _productRepository = productRepository;
-            _unitOfWork = unitOfWork;
             _eventList = eventList;
         }
 
@@ -31,29 +28,27 @@ namespace RC.Catalog.API.Application.Commands
 
             var product = new Product(request.Name, request.Description, request.Value, request.Quantity);
 
-            // TODO: Get from SQL Server (Write database) using command repository using Entity Framework!!!
-            // var storedProduct = await _productQueryRepository.GetByNameAsync(product.Name);
+            var storedProduct = _productRepository.GetByName(product.Name);
 
-            if (false)
-            //if (storedProduct != null)
+            if (storedProduct != null)
             {
                 AddError("Product already exists");
                 return ValidationResult;
             }
 
-            await _unitOfWork.BeginTransaction();
+            // await _unitOfWork.BeginTransaction();
 
             try
             {
-                product = _productRepository.Add(product);
+                _productRepository.Add(product);
 
                 _eventList.AddEvent(new ProductAddedEvent(product.Id, product.Name, product.Description, product.Value, product.Quantity));
 
-                await _unitOfWork.Commit();
+                // await _unitOfWork.Commit();
             }
             catch
             {
-                await _unitOfWork.Rollback();
+                // await _unitOfWork.Rollback();
                 AddError("An error ocurred while creating the product");
                 return ValidationResult;
             }

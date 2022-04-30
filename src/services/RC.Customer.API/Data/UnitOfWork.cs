@@ -1,14 +1,14 @@
 ﻿using RC.Core.Data;
 using RC.Core.Mediator;
 
-namespace RC.Catalog.API.Data
+namespace RC.Customer.API.Data
 {
-    public sealed class SqlServerUnitOfWork : IUnitOfWork
+    public sealed class UnitOfWork : IUnitOfWork
     {
         private readonly IDbSession _session;
         private readonly MediatREventList _eventList;
 
-        public SqlServerUnitOfWork(IDbSession session, MediatREventList eventList)
+        public UnitOfWork(IDbSession session, MediatREventList eventList)
         {
             _session = session;
             _eventList = eventList;

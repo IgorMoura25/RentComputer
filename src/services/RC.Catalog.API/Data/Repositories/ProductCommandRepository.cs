@@ -1,45 +1,44 @@
-﻿using RC.Catalog.API.Data.DTO;
+﻿using Microsoft.EntityFrameworkCore;
 using RC.Catalog.API.Domain;
-using RC.Core.Data.Dapper;
+using RC.Core.Data;
 
 namespace RC.Catalog.API.Data.Repositories
 {
-    public class ProductCommandRepository : DapperRepository, IProductCommandRepository
+    public class ProductCommandRepository : IProductCommandRepository
     {
-        private IDapperProcedureExecution _dapperProcedureExecution { get; }
+        private readonly CatalogContext _context;
 
-        public ProductCommandRepository(IDapperProcedureExecution dapperProcedureExecution)
+        public IUnitOfWork UnitOfWork => _context;
+
+        public ProductCommandRepository(CatalogContext context)
         {
-            _dapperProcedureExecution = dapperProcedureExecution;
+            _context = context;
         }
 
         public Product Add(Product product)
         {
-            return _dapperProcedureExecution.ExecuteAddProcedure<Product>
-                (
-                    "RC_ADD_Product",
-                    new AddProductDTO()
-                    {
-                        UniversalId = product.UniversalId,
-                        Name = product.Name,
-                        Description = product.Description,
-                        Value = product.Value,
-                        Quantity = product.Quantity,
-                        IsActive = product.IsActive,
-                        CreatedAt = product.CreatedAt
-                    },
-                    CommandTimeout
-                );
+            _context.Products.Add(product);
+
+            return product;
+        }
+
+        public async Task<Product?> GetByName(string name)
+        {
+            return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Name == name);
         }
 
         public void Dispose()
         {
-            _dapperProcedureExecution?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public override void AddCustomTypeHandlersBaseCall()
+        protected virtual void Dispose(bool disposing)
         {
-            base.AddCustomTypeHandler<IEnumerable<ProductImage>>();
+            if (disposing)
+            {
+                _context.Dispose();
+            }
         }
     }
 }

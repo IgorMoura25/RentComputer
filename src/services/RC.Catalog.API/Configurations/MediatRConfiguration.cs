@@ -20,7 +20,7 @@ namespace RC.Catalog.API.Configurations
             services.AddScoped<INotificationHandler<ProductAddedEvent>, ProductEventHandler>();
             services.AddScoped<MediatREventList>();
 
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            //services.AddMediatR(Assembly.GetExecutingAssembly());
         }
     }
 }

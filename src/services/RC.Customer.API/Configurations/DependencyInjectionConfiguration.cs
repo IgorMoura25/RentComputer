@@ -11,7 +11,7 @@ namespace RC.Customer.API.Configurations
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IDbSession>(service => new SqlServerDbSession(configuration.GetConnectionString("SqlServer")));
-            services.AddTransient<IUnitOfWork, SqlServerUnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IDapperProcedureExecution, DapperProcedureExecution>();
 
