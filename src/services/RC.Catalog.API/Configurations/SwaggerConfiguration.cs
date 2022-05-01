@@ -4,7 +4,7 @@ namespace RC.Catalog.API.Configurations
 {
     public static class SwaggerConfiguration
     {
-        public static void AddSwaggerConfiguration(this IServiceCollection services)
+        public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
             {
@@ -24,6 +24,8 @@ namespace RC.Catalog.API.Configurations
                     }
                 });
             });
+
+            return services;
         }
 
         public static void UseSwaggerConfiguration(this IApplicationBuilder app)

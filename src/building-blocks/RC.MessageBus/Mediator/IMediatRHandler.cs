@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
 using RC.Core.Messages;
 
-namespace RC.Core.Mediator
+namespace RC.MessageBus.Mediator
 {
     public interface IMediatRHandler
     {

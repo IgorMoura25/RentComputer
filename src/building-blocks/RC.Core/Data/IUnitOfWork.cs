@@ -2,8 +2,8 @@
 {
     public interface IUnitOfWork : IDisposable
     {
-        Task<bool> BeginTransaction();
-        Task<bool> Commit();
-        Task<bool> Rollback();
+        bool BeginTransaction();
+        Task<bool> CommitAsync();
+        Task<bool> RollbackAsync();
     }
 }

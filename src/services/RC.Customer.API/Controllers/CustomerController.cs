@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RC.Core.Mediator;
 using RC.Customer.API.Application.Commands;
 using RC.Customer.API.Application.Queries;
+using RC.MessageBus.Mediator;
 using RC.WebAPI.Core;
 using System.Net;
 

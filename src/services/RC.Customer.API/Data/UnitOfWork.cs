@@ -1,5 +1,5 @@
 ﻿using RC.Core.Data;
-using RC.Core.Mediator;
+using RC.MessageBus.Mediator;
 
 namespace RC.Customer.API.Data
 {
@@ -14,14 +14,14 @@ namespace RC.Customer.API.Data
             _eventList = eventList;
         }
 
-        public async Task<bool> BeginTransaction()
+        public bool BeginTransaction()
         {
             _session.Transaction = _session.Connection.BeginTransaction();
 
             return true;
         }
 
-        public async Task<bool> Commit()
+        public async Task<bool> CommitAsync()
         {
             _session.Transaction.Commit();
             Dispose();
@@ -31,7 +31,7 @@ namespace RC.Customer.API.Data
             return true;
         }
 
-        public async Task<bool> Rollback()
+        public async Task<bool> RollbackAsync()
         {
             _session.Transaction.Rollback();
             Dispose();

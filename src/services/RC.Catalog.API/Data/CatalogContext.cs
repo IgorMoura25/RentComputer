@@ -23,11 +23,6 @@ namespace RC.Catalog.API.Data
             _databaseSettings = databaseSettings;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_databaseSettings.Value.WriteConnectionString);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Ignore<ValidationResult>();
@@ -46,17 +41,17 @@ namespace RC.Catalog.API.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogContext).Assembly);
         }
 
-        public Task<bool> BeginTransaction()
+        public bool BeginTransaction()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> Commit()
+        public async Task<bool> CommitAsync()
         {
             return await base.SaveChangesAsync() > 0;
         }
 
-        public Task<bool> Rollback()
+        public Task<bool> RollbackAsync()
         {
             throw new NotImplementedException();
         }

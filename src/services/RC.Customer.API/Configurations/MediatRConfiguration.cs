@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using MediatR;
-using RC.Core.Mediator;
+using RC.MessageBus.Mediator;
 
 namespace RC.Customer.API.Configurations
 {

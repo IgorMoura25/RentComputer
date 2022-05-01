@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\building-blocks\RC.Core\RC.Core.csproj" />
+    <ProjectReference Include="..\..\building-blocks\RC.MessageBus\RC.MessageBus.csproj" />
     <ProjectReference Include="..\..\building-blocks\RC.WebAPI.Core\RC.WebAPI.Core.csproj" />
   </ItemGroup>
 

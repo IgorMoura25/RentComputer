@@ -1,4 +1,7 @@
-﻿namespace RC.Catalog.API.Configurations
+﻿using RC.MessageBus;
+using RC.MessageBus.Configuration;
+
+namespace RC.Catalog.API.Configurations
 {
     public static class ApiConfiguration
     {
@@ -6,13 +9,18 @@
         {
             services.AddControllers();
 
-            services.Configure<DataBaseSettings>(configuration.GetSection("DataBaseSettings"));
+            services.Configure<DataBaseSettings>(configuration.GetSection(nameof(DataBaseSettings)));
+            services.Configure<MessageBusSettings>(configuration.GetSection(nameof(MessageBusSettings)));
 
-            services.RegisterServices(configuration);
+            var dataBaseSettings = configuration.GetSection(nameof(DataBaseSettings)).Get<DataBaseSettings>();
+            var messageBusSettings = configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
 
-            services.RegisterMediatR();
-
-            services.AddSwaggerConfiguration();
+            services
+                .RegisterServices()
+                .RegisterApplicationServices()
+                .RegisterDataServices(dataBaseSettings)
+                .AddMessageBusOrDefault(messageBusSettings.ConnectionString, MessageBusProvider.EasyNetQ)
+                .AddSwaggerConfiguration();
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)

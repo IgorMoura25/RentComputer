@@ -22,7 +22,7 @@ namespace RC.Catalog.API.Data.Repositories
             return product;
         }
 
-        public async Task<Product?> GetByName(string name)
+        public async Task<Product?> GetByNameAsync(string name)
         {
             return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Name == name);
         }

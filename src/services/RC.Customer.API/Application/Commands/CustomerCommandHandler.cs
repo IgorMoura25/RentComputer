@@ -1,11 +1,11 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 using RC.Core.Data;
-using RC.Core.Mediator;
 using RC.Core.Messages;
 using RC.Customer.API.Application.Events;
 using RC.Customer.API.Data.Repositories;
 using RC.Customer.API.Domain;
+using RC.MessageBus.Mediator;
 
 namespace RC.Customer.API.Application.Commands
 {
@@ -39,7 +39,7 @@ namespace RC.Customer.API.Application.Commands
                 return ValidationResult;
             }
 
-            await _unitOfWork.BeginTransaction();
+            _unitOfWork.BeginTransaction();
 
             try
             {
@@ -47,11 +47,11 @@ namespace RC.Customer.API.Application.Commands
 
                 _eventList.AddEvent(new CustomerAddedEvent(customer.Id, customer.Name, customer.Email?.EmailAddress, customer.NationalId?.Number));
 
-                await _unitOfWork.Commit();
+                await _unitOfWork.CommitAsync();
             }
             catch
             {
-                await _unitOfWork.Rollback();
+                await _unitOfWork.RollbackAsync();
                 AddError("An error ocurred while creating the customer");
                 return ValidationResult;
             }
