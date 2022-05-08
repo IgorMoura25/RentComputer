@@ -27,7 +27,7 @@ namespace RC.Catalog.API.Application.Commands
 
             var product = new Product(request.Name, request.Description, request.Value, request.Quantity);
 
-            var storedProduct = _productRepository.GetByNameAsync(product.Name);
+            var storedProduct = await _productRepository.GetByNameAsync(product.Name);
 
             if (storedProduct != null)
             {

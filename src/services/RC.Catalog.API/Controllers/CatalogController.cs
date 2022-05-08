@@ -15,9 +15,10 @@ namespace RC.Catalog.API.Controllers
         private readonly IProductQueries _productQueries;
         private IEasyNetQBus _bus { get; set; }
 
-        public CatalogController(IProductQueries productQueries)
+        public CatalogController(IProductQueries productQueries, IEasyNetQBus bus)
         {
             _productQueries = productQueries;
+            _bus = bus;
         }
 
         [HttpGet]

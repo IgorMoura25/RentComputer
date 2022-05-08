@@ -23,17 +23,25 @@ namespace RC.Catalog.API.Services
 
         private void SetResponders()
         {
-            using var scope = _serviceProvider.CreateScope();
-            var productCommandHandler = scope.ServiceProvider.GetRequiredService<IProductCommandHandler>();
-
-            _bus.RespondAsync<AddProductCommand, ValidationResult>(async request => await productCommandHandler.AddProduct(request));
-
-            _bus.AdvancedBus.Connected += OnConnect;
+            _bus.RespondAsync<AddProductCommand, ValidationResult>(async request => await AddProduct(request));
         }
 
         private void OnConnect(object s, EventArgs e)
         {
             SetResponders();
+        }
+
+        private async Task<ValidationResult> AddProduct(AddProductCommand request)
+        {
+            ValidationResult validation;
+
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var commandHandler = scope.ServiceProvider.GetRequiredService<IProductCommandHandler>();
+                validation = await commandHandler.AddProduct(request);
+            }
+
+            return validation;
         }
     }
 }

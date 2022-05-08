@@ -1,6 +1,6 @@
 ﻿namespace RC.MessageBus
 {
-    public enum MessageBusProvider
+    public enum MessageBusProviderEnum
     {
         EasyNetQ = 1
     }

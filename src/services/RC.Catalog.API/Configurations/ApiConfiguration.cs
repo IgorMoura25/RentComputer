@@ -19,7 +19,7 @@ namespace RC.Catalog.API.Configurations
                 .RegisterServices()
                 .RegisterApplicationServices()
                 .RegisterDataServices(dataBaseSettings)
-                .AddMessageBusOrDefault(messageBusSettings.ConnectionString, MessageBusProvider.EasyNetQ)
+                .AddMessageBusOrDefault(messageBusSettings.ConnectionString, MessageBusProviderEnum.EasyNetQ)
                 .AddSwaggerConfiguration();
         }
 
