@@ -38,7 +38,7 @@ namespace RC.Catalog.API.Application.Commands
 
             _productRepository.Add(product);
 
-            _eventList.AddEvent(new ProductAddedEvent(product.Id, product.Name, product.Description, product.Value, product.Quantity));
+            _eventList.AddEvent(new ProductAddedEvent(product.Id, product.UniversalId, product.Name, product.Description, product.Value, product.Quantity, product.IsActive, product.CreatedAt));
 
             var success = await _productRepository.UnitOfWork.CommitAsync();
 

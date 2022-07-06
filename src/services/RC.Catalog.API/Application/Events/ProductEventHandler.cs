@@ -18,10 +18,13 @@ namespace RC.Catalog.API.Application.Events
             await _productQueryRepository.CreateAsync(new ProductDTO()
             {
                 Id = Guid.NewGuid().ToString(),
+                ProductGuid = notification.ProductGuid.ToString(),
                 Name = notification.Name,
                 Description = notification.Description,
                 Value = notification.Value,
-                Quantity = notification.Quantity
+                Quantity = notification.Quantity,
+                IsActive = notification.IsActive,
+                CreatedAt = notification.CreatedAt
             });
         }
     }
