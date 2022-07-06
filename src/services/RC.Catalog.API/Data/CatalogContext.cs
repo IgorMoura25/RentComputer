@@ -5,6 +5,7 @@ using RC.Catalog.API.Configurations;
 using RC.Catalog.API.Domain;
 using RC.Core.Data;
 using RC.Core.Messages;
+using RC.MessageBus.Mediator;
 
 namespace RC.Catalog.API.Data
 {
@@ -14,11 +15,13 @@ namespace RC.Catalog.API.Data
         public DbSet<ProductImage> ProductImages { get; set; }
 
         private readonly IOptions<DataBaseSettings> _databaseSettings;
+        private readonly MediatREventList _eventList;
 
-        public CatalogContext(DbContextOptions<CatalogContext> options, IOptions<DataBaseSettings> databaseSettings) : base(options)
+        public CatalogContext(DbContextOptions<CatalogContext> options, IOptions<DataBaseSettings> databaseSettings, MediatREventList eventList) : base(options)
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             ChangeTracker.AutoDetectChangesEnabled = false;
+            _eventList = eventList;
 
             _databaseSettings = databaseSettings;
         }
@@ -48,7 +51,14 @@ namespace RC.Catalog.API.Data
 
         public async Task<bool> CommitAsync()
         {
-            return await base.SaveChangesAsync() > 0;
+            var success = await base.SaveChangesAsync() > 0;
+
+            if (success)
+            {
+                await _eventList.PublishEventsAsync();
+            }
+
+            return success;
         }
 
         public Task<bool> RollbackAsync()

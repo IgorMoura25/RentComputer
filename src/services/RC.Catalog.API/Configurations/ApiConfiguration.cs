@@ -17,6 +17,7 @@ namespace RC.Catalog.API.Configurations
 
             services
                 .RegisterServices()
+                .RegisterMediatR()
                 .RegisterApplicationServices()
                 .RegisterDataServices(dataBaseSettings)
                 .AddMessageBusOrDefault(messageBusSettings.ConnectionString, MessageBusProviderEnum.EasyNetQ)

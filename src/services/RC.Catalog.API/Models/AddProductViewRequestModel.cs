@@ -1,12 +1,7 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace RC.Catalog.API.Data.DTO
+﻿namespace RC.Catalog.API.Models
 {
-    public class ProductDTO
+    public class AddProductViewRequestModel
     {
-        [BsonId]
-        public string? Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public decimal Value { get; set; }

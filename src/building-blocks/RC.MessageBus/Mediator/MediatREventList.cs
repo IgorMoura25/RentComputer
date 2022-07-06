@@ -2,11 +2,11 @@
 
 namespace RC.MessageBus.Mediator
 {
-    public class MediatREventList : GenericEventList<MediatREvent>
+    public class MediatREventList
     {
         private readonly IMediatRHandler _mediatRHandler;
-        //private List<MediatREvent> _events;
-        //public IReadOnlyCollection<MediatREvent> Events => _events?.AsReadOnly();
+        private List<MediatREvent>? _events;
+        public IReadOnlyCollection<MediatREvent> Events => _events?.AsReadOnly();
 
         public MediatREventList(IMediatRHandler mediatorHandler)
         {
@@ -15,27 +15,25 @@ namespace RC.MessageBus.Mediator
 
         public void AddEvent(MediatREvent eventToAdd)
         {
-            //_events = _events ?? new List<MediatREvent>();
-            //_events.Add(eventToAdd);
-
-            Add(eventToAdd);
+            _events = _events ?? new List<MediatREvent>();
+            _events.Add(eventToAdd);
         }
 
-        public void RemoveEvent(MediatREvent eventToRemove)
+        public void Remove(MediatREvent eventToRemove)
         {
-            Remove(eventToRemove);
+            _events.Remove(eventToRemove);
         }
 
-        private void ClearEvents()
+        private void ClearAll()
         {
-            ClearAll();
+            _events.Clear();
         }
 
-        public override async Task PublishEventsAsync()
+        public async Task PublishEventsAsync()
         {
             var eventsToPublish = new List<MediatREvent>();
             eventsToPublish.AddRange(Events);
-            ClearEvents();
+            ClearAll();
 
             foreach (var eventToPublish in eventsToPublish)
             {

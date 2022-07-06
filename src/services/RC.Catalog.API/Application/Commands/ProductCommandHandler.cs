@@ -1,24 +1,25 @@
 ﻿using FluentValidation.Results;
+using MediatR;
 using RC.Catalog.API.Application.Events;
 using RC.Catalog.API.Data.Repositories;
 using RC.Catalog.API.Domain;
 using RC.Core.Messages;
-using RC.MessageBus;
+using RC.MessageBus.Mediator;
 
 namespace RC.Catalog.API.Application.Commands
 {
-    public class ProductCommandHandler : CommandHandler, IProductCommandHandler
+    public class ProductCommandHandler : CommandHandler, IRequestHandler<AddProductCommand, ValidationResult>
     {
         private readonly IProductCommandRepository _productRepository;
-        private readonly EventList _eventList;
+        private readonly MediatREventList _eventList;
 
-        public ProductCommandHandler(IProductCommandRepository productRepository, EventList eventList)
+        public ProductCommandHandler(IProductCommandRepository productRepository, MediatREventList eventList)
         {
             _productRepository = productRepository;
             _eventList = eventList;
         }
 
-        public async Task<ValidationResult> AddProduct(AddProductCommand request)
+        public async Task<ValidationResult> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
             {

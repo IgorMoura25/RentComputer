@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RC.Catalog.API.Data.Repositories;
-using RC.Catalog.API.Application.Commands;
 using RC.Catalog.API.Application.Queries;
-using RC.Catalog.API.Services;
 using RC.Catalog.API.Data;
-using RC.MessageBus;
-using RC.MessageBus.EasyNetQ;
 
 namespace RC.Catalog.API.Configurations
 {
@@ -13,9 +9,6 @@ namespace RC.Catalog.API.Configurations
     {
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
-            services.AddScoped<EventList>();
-            services.AddHostedService<CommandBusHandler>();
-
             return services;
         }
 
@@ -32,7 +25,6 @@ namespace RC.Catalog.API.Configurations
         public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IProductQueries, ProductQueries>();
-            services.AddScoped<IProductCommandHandler, ProductCommandHandler>();
 
             return services;
         }

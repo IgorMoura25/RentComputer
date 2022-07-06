@@ -1,11 +1,10 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using FluentValidation.Results;
 using RC.Catalog.API.Application.Commands;
 using RC.Catalog.API.Application.Queries;
 using RC.WebAPI.Core;
-using RC.MessageBus;
-using RC.MessageBus.EasyNetQ;
+using RC.MessageBus.Mediator;
+using RC.Catalog.API.Models;
 
 namespace RC.Catalog.API.Controllers
 {
@@ -13,12 +12,12 @@ namespace RC.Catalog.API.Controllers
     public class CatalogController : MainController
     {
         private readonly IProductQueries _productQueries;
-        private IEasyNetQBus _bus { get; set; }
+        private readonly IMediatRHandler _bus;
 
-        public CatalogController(IProductQueries productQueries, IEasyNetQBus bus)
+        public CatalogController(IProductQueries productQueries, IMediatRHandler mediator)
         {
             _productQueries = productQueries;
-            _bus = bus;
+            _bus = mediator;
         }
 
         [HttpGet]
@@ -30,9 +29,9 @@ namespace RC.Catalog.API.Controllers
 
         [HttpPost]
         [Route("product")]
-        public async Task<IActionResult> AddProductAsync()
+        public async Task<IActionResult> AddProductAsync([FromBody] AddProductViewRequestModel model)
         {
-            var result = await _bus.RequestAsync<AddProductCommand, ValidationResult>(new AddProductCommand(0, "Produto 1", "Descrição produto 1", 25.53m, 3));
+            var result = await _bus.SendCommandAsync(new AddProductCommand(0, model.Name, model.Description, model.Value, model.Quantity));
 
             return CustomResponse(result, HttpStatusCode.Created);
         }
