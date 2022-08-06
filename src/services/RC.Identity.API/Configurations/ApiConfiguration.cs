@@ -2,9 +2,15 @@
 {
     public static class ApiConfiguration
     {
-        public static IServiceCollection AddApiConfiguration(this IServiceCollection services)
+        public static IServiceCollection AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
+
+            var dataBaseSettings = configuration.GetSection(nameof(DataBaseSettings)).Get<DataBaseSettings>();
+
+            services
+                .RegisterDataServices(dataBaseSettings)
+                .AddIdentity();
 
             return services;
         }
@@ -21,6 +27,10 @@
             }
 
             app.UseHsts();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
