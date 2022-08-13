@@ -5,9 +5,11 @@ using RC.Catalog.API.Application.Queries;
 using RC.WebAPI.Core;
 using RC.MessageBus.Mediator;
 using RC.Catalog.API.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RC.Catalog.API.Controllers
 {
+    [Authorize]
     [Route("catalog")]
     public class CatalogController : MainController
     {

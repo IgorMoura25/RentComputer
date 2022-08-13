@@ -1,5 +1,6 @@
 ﻿using RC.MessageBus;
 using RC.MessageBus.Configuration;
+using RC.WebAPI.Core.Auth;
 
 namespace RC.Catalog.API.Configurations
 {
@@ -21,7 +22,8 @@ namespace RC.Catalog.API.Configurations
                 .RegisterApplicationServices()
                 .RegisterDataServices(dataBaseSettings)
                 .AddMessageBusOrDefault(messageBusSettings.ConnectionString, MessageBusProviderEnum.EasyNetQ)
-                .AddSwaggerConfiguration();
+                .AddSwaggerConfiguration()
+                .AddJwtConfiguration();
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,6 +40,8 @@ namespace RC.Catalog.API.Configurations
             }
 
             app.UseHsts();
+
+            app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {

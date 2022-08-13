@@ -40,4 +40,8 @@
     <ProjectReference Include="..\..\building-blocks\RC.WebAPI.Core\RC.WebAPI.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

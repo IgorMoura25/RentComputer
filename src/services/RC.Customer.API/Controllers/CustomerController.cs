@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using RC.Customer.API.Application.Commands;
 using RC.Customer.API.Application.Queries;
 using RC.MessageBus.Mediator;
 using RC.WebAPI.Core;
-using System.Net;
 
 namespace RC.Customer.API.Controllers
 {

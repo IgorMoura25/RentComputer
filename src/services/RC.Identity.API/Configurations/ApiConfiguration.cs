@@ -1,4 +1,6 @@
-﻿namespace RC.Identity.API.Configurations
+﻿using RC.WebAPI.Core.Auth;
+
+namespace RC.Identity.API.Configurations
 {
     public static class ApiConfiguration
     {
@@ -7,10 +9,13 @@
             services.AddControllers();
 
             var dataBaseSettings = configuration.GetSection(nameof(DataBaseSettings)).Get<DataBaseSettings>();
+            services.Configure<JwtConfigurationOptions>(configuration.GetSection("JwtConfiguration"));
 
             services
+                .AddSwaggerConfiguration()
                 .RegisterDataServices(dataBaseSettings)
-                .AddIdentity();
+                .AddIdentity()
+                .AddJwtSigningCryptographyConfiguration(JwtSigningCryptography.Rsa);
 
             return services;
         }
@@ -28,9 +33,7 @@
 
             app.UseHsts();
 
-            app.UseAuthentication();
-
-            app.UseAuthorization();
+            app.UseSwaggerConfiguration();
 
             app.UseEndpoints(endpoints =>
             {

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Net;
-using System.Web.Http;
 
 namespace RC.WebAPI.Core
 {
