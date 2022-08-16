@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using RC.Identity.API.Data.Repositories;
 using RC.Identity.API.Models;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace RC.Identity.API.CryptoHandlers
 {
@@ -14,11 +15,13 @@ namespace RC.Identity.API.CryptoHandlers
     {
         private readonly ISecurityKeyRepository _securityKeyRepository;
         private readonly IMemoryCache _memoryCache;
+        private readonly IDistributedCache _distributedCache;
 
-        public RsaCryptoHandler(ISecurityKeyRepository securityKeyRepository, IMemoryCache memoryCache)
+        public RsaCryptoHandler(ISecurityKeyRepository securityKeyRepository, IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             _securityKeyRepository = securityKeyRepository;
             _memoryCache = memoryCache;
+            _distributedCache = distributedCache;
         }
 
         public async Task<string> CreateJwtTokenAsync(string issuer, ClaimsIdentity? subject, DateTime expires)
@@ -40,6 +43,62 @@ namespace RC.Identity.API.CryptoHandlers
 
                 // Salva no cache por 15 minutos
                 _memoryCache.Set("privateKey", privateKey, TimeSpan.FromMinutes(15));
+            }
+
+            // Converte de Base64Url para bytes
+            var privateKeyBytes = Convert.FromBase64String(privateKey);
+
+
+            // Instancia um novo RSA
+            using var rsa = RSA.Create();
+
+            // Importa a chave privada
+            rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            // Cria o token com as credenciais de assinatura
+            // RSA como criptografia de chave e SHA256 como função de hash
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            {
+                // Exemplo 1: https://auth.rentcomputer.api
+                // Exemplo 2: http://localhost:7321
+                Issuer = issuer,
+                Subject = subject,
+                Expires = expires,
+                SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
+                {
+                    CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
+                }
+            });
+
+            // Assina o token com o SigningCredentials
+            // e retorna um JWS
+            return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<string> CreateJwtTokenFromDistributedCacheAsync(string issuer, ClaimsIdentity? subject, DateTime expires)
+        {
+            // Recupera chave do cache distribuído
+            var privateKey = _distributedCache.GetString("privateKey");
+
+            // Se não existir, recupera chave privada mais recente da base
+            if (privateKey == null)
+            {
+                privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                // Se não existir, cria um par de chaves novo
+                if (privateKey == null)
+                {
+                    await CreateKeysAsync();
+                    privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync() ?? throw new NullReferenceException("Failed to provide a private key");
+                }
+
+                // Salva no cache por 15 minutos
+                await _distributedCache.SetAsync("privateKey", Encoding.UTF8.GetBytes(privateKey), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
+                });
             }
 
             // Converte de Base64Url para bytes

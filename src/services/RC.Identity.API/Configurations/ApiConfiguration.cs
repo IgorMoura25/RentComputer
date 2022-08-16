@@ -16,7 +16,12 @@ namespace RC.Identity.API.Configurations
                 .RegisterDataServices(dataBaseSettings)
                 .AddIdentity()
                 .AddJwtSigningCryptographyConfiguration(JwtSigningCryptography.Rsa)
-                .AddMemoryCache();
+                .AddMemoryCache()
+                .AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = "localhost:6379";
+                    options.InstanceName = "Demo_RedisCache";
+                });
 
             return services;
         }

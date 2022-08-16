@@ -84,7 +84,7 @@ namespace RC.Identity.API.Controllers
         {
             // Gera um token passando um emissor, as claims
             // e o tempo de expiração do token em minutos
-            var jws = await _cryptoHandler.CreateJwtTokenAsync(_options.Value.Issuer, await GetJwtClaims(userEmail), DateTime.UtcNow.AddMinutes(_options.Value.ExpirationMinutes));
+            var jws = await _cryptoHandler.CreateJwtTokenFromDistributedCacheAsync(_options.Value.Issuer, await GetJwtClaims(userEmail), DateTime.UtcNow.AddMinutes(_options.Value.ExpirationMinutes));
 
             // Retornando o JWS
             return jws;
