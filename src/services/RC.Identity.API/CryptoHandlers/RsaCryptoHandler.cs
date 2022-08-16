@@ -1,33 +1,45 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
-using Microsoft.IdentityModel.Tokens;
-using RC.Identity.API.Data.Repositories;
-using RC.Identity.API.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
+using RC.Identity.API.Data.Repositories;
+using RC.Identity.API.Models;
 
 namespace RC.Identity.API.CryptoHandlers
 {
     public class RsaCryptoHandler : ICryptoHandler
     {
         private readonly ISecurityKeyRepository _securityKeyRepository;
+        private readonly IMemoryCache _memoryCache;
 
-        public RsaCryptoHandler(ISecurityKeyRepository securityKeyRepository)
+        public RsaCryptoHandler(ISecurityKeyRepository securityKeyRepository, IMemoryCache memoryCache)
         {
             _securityKeyRepository = securityKeyRepository;
+            _memoryCache = memoryCache;
         }
 
         public async Task<string> CreateJwtTokenAsync(string issuer, ClaimsIdentity? subject, DateTime expires)
         {
-            // Recupera chave privada mais recente
-            var privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+            // Recupera chave do cache em memória
+            var privateKey = _memoryCache.Get<string>("privateKey");
 
-            // Se não existir, cria um par de chaves novo
+            // Se não existir, recupera chave privada mais recente da base
             if (privateKey == null)
             {
-                await CreateKeysAsync();
-                privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync() ?? throw new NullReferenceException("Failed to provide a private key");
+                privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                // Se não existir, cria um par de chaves novo
+                if (privateKey == null)
+                {
+                    await CreateKeysAsync();
+                    privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync() ?? throw new NullReferenceException("Failed to provide a private key");
+                }
+
+                // Salva no cache por 15 minutos
+                _memoryCache.Set("privateKey", privateKey, TimeSpan.FromMinutes(1));
             }
 
             // Converte de Base64Url para bytes

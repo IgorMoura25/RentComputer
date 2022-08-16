@@ -15,7 +15,8 @@ namespace RC.Identity.API.Configurations
                 .AddSwaggerConfiguration()
                 .RegisterDataServices(dataBaseSettings)
                 .AddIdentity()
-                .AddJwtSigningCryptographyConfiguration(JwtSigningCryptography.Rsa);
+                .AddJwtSigningCryptographyConfiguration(JwtSigningCryptography.Rsa)
+                .AddMemoryCache();
 
             return services;
         }
