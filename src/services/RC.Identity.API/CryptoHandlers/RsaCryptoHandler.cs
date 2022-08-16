@@ -32,13 +32,18 @@ namespace RC.Identity.API.CryptoHandlers
             // Se não existir, recupera chave privada mais recente da base
             if (privateKey == null)
             {
-                privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                var key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                privateKey = key?.PrivateKey;
 
                 // Se não existir, cria um par de chaves novo
                 if (privateKey == null)
                 {
                     await CreateKeysAsync();
-                    privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync() ?? throw new NullReferenceException("Failed to provide a private key");
+
+                    key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                    privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
                 }
 
                 // Salva no cache por 15 minutos
@@ -85,13 +90,18 @@ namespace RC.Identity.API.CryptoHandlers
             // Se não existir, recupera chave privada mais recente da base
             if (privateKey == null)
             {
-                privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                var key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                privateKey = key?.PrivateKey;
 
                 // Se não existir, cria um par de chaves novo
                 if (privateKey == null)
                 {
                     await CreateKeysAsync();
-                    privateKey = await _securityKeyRepository.GetCurrentPrivateKeyAsync() ?? throw new NullReferenceException("Failed to provide a private key");
+
+                    key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                    privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
                 }
 
                 // Salva no cache por 15 minutos
@@ -150,11 +160,12 @@ namespace RC.Identity.API.CryptoHandlers
             var keyId = Guid.NewGuid();
 
             // Salva na base
+            var now = DateTime.UtcNow;
+
             await _securityKeyRepository.AddAsync(new JwtSecurityKey()
             {
                 KeyId = keyId,
-                PrivateKey = privateKeyBuffer.ToString(),
-                CreationDate = DateTime.UtcNow,
+                CreationDate = now,
 
                 // Sendo o campo "PublicParameters" um JWK
                 // que será usado para validação dos tokens emitidos
@@ -167,6 +178,12 @@ namespace RC.Identity.API.CryptoHandlers
                     Modulus = Base64UrlEncoder.Encode(parameters.Modulus),
                     Exponent = Base64UrlEncoder.Encode(parameters.Exponent)
                 }),
+            });
+
+            await _securityKeyRepository.AddPrivateKeyAsync(new JwtPrivateKey()
+            {
+                PrivateKey = privateKeyBuffer.ToString(),
+                CreationDate = now
             });
         }
     }

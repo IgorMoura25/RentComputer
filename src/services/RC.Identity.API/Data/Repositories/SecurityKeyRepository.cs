@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using RC.Identity.API.Models;
-using System.Text.Json;
 
 namespace RC.Identity.API.Data.Repositories
 {
@@ -21,11 +21,24 @@ namespace RC.Identity.API.Data.Repositories
             return model;
         }
 
-        public async Task<string?> GetCurrentPrivateKeyAsync()
+        public async Task<JwtPrivateKey> AddPrivateKeyAsync(JwtPrivateKey model)
         {
-            var jwtSecurity = await _context.SecurityKeys.AsNoTracking().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+            var previousKey = await GetCurrentPrivateKeyAsync();
 
-            return jwtSecurity?.PrivateKey;
+            if (previousKey != null)
+            {
+                _context.PrivateKey.Remove(previousKey);
+            }
+
+            await _context.PrivateKey.AddAsync(model);
+            await _context.SaveChangesAsync();
+
+            return model;
+        }
+
+        public async Task<JwtPrivateKey?> GetCurrentPrivateKeyAsync()
+        {
+            return await _context.PrivateKey.AsNoTracking().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
         }
 
         public List<JasonWebKey> GetRecentKeys()

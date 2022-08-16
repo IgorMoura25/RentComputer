@@ -4,17 +4,17 @@ using RC.Identity.API.Models;
 
 namespace RC.Catalog.API.Data.Mapping
 {
-    public class SecurityKeyMapping : IEntityTypeConfiguration<JwtSecurityKey>
+    public class PrivateKeyMapping : IEntityTypeConfiguration<JwtPrivateKey>
     {
-        public void Configure(EntityTypeBuilder<JwtSecurityKey> builder)
+        public void Configure(EntityTypeBuilder<JwtPrivateKey> builder)
         {
             builder.HasKey(p => new { p.Id });
 
             builder.Property(i => i.Id).UseIdentityColumn();
-            builder.Property(p => p.PublicParameters).HasColumnType("varchar(MAX)");
+            builder.Property(i => i.PrivateKey).HasColumnType("varchar(MAX)");
             builder.Property(p => p.CreationDate).HasColumnType("datetime").IsRequired();
 
-            builder.ToTable("SecurityKeys");
+            builder.ToTable("PrivateKey");
         }
     }
 }
