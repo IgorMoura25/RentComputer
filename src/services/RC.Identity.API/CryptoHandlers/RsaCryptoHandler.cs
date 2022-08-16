@@ -39,7 +39,7 @@ namespace RC.Identity.API.CryptoHandlers
                 }
 
                 // Salva no cache por 15 minutos
-                _memoryCache.Set("privateKey", privateKey, TimeSpan.FromMinutes(1));
+                _memoryCache.Set("privateKey", privateKey, TimeSpan.FromMinutes(15));
             }
 
             // Converte de Base64Url para bytes
