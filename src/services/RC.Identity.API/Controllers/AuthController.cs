@@ -77,11 +77,13 @@ namespace RC.Identity.API.Controllers
             {
                 var accessToken = await GenerateJwt(model.Email);
                 var refreshToken = await _cryptoHandler.CreateRefreshTokenAsync(model.Email);
+                var jwtRefreshToken = await _cryptoHandler.CreateJwtRefreshTokenAsync(_options.Value.Issuer, await GetJwtClaims(model.Email), DateTime.UtcNow.AddMinutes(480)); // 8 horas
 
                 var response = new
                 {
                     access_token = accessToken,
-                    refreshToken = refreshToken.Token
+                    refreshToken = refreshToken.Token,
+                    jwtRefreshToken = jwtRefreshToken
                 };
 
                 return CustomResponse(response);
@@ -114,7 +116,7 @@ namespace RC.Identity.API.Controllers
 
         [HttpGet]
         [Route("refresh-token/{refreshToken}")]
-        public async Task<IActionResult> GetAccessTokenByRefreshToken([FromRoute] Guid refreshToken)
+        public async Task<IActionResult> GetAccessTokenByRefreshTokenAsync([FromRoute] Guid refreshToken)
         {
             var token = await _cryptoHandler.GetRefreshToken(refreshToken);
 
@@ -144,6 +146,33 @@ namespace RC.Identity.API.Controllers
 
             return CustomResponse(response);
         }
+
+        [HttpGet]
+        [Route("refresh-token-jwt/{refreshToken}")]
+        public async Task<IActionResult> GetAccessTokenByRefreshTokenAsync([FromRoute] string refreshToken)
+        {
+            var userName = await _cryptoHandler.GetSubjectFromJwtRefreshToken(refreshToken);
+
+            // Refresh Token inválido / expirado
+            if (string.IsNullOrEmpty(userName))
+            {
+                AddError("Expired refresh token");
+                return CustomResponse();
+            }
+
+            // Refresh Token válido para gerar novo access token (jwt)
+            var accessToken = await GenerateJwt(userName);
+            var newRefreshToken = await _cryptoHandler.CreateJwtRefreshTokenAsync(_options.Value.Issuer, await GetJwtClaims(userName), DateTime.UtcNow.AddMinutes(480)); // 8 horas
+
+            var response = new
+            {
+                access_token = accessToken,
+                refreshToken = newRefreshToken
+            };
+
+            return CustomResponse(response);
+        }
+
 
         private async Task<string> GenerateJwt(string userEmail)
         {

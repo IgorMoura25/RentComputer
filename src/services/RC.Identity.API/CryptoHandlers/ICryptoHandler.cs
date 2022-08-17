@@ -11,5 +11,7 @@ namespace RC.Identity.API.CryptoHandlers
         Task<bool> ValidateJweCreditCardAsync(string jwe);
         Task<RefreshToken> CreateRefreshTokenAsync(string email);
         Task<RefreshToken?> GetRefreshToken(Guid refreshToken);
+        Task<string> CreateJwtRefreshTokenAsync(string issuer, ClaimsIdentity? subject, DateTime expires);
+        Task<string?> GetSubjectFromJwtRefreshToken(string refreshToken);
     }
 }

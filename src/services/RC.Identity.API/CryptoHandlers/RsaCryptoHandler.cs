@@ -72,6 +72,7 @@ namespace RC.Identity.API.CryptoHandlers
                 Issuer = issuer,
                 Subject = subject,
                 Expires = expires,
+                TokenType = "at+jwt",
                 SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
                 {
                     CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
@@ -133,6 +134,7 @@ namespace RC.Identity.API.CryptoHandlers
                 Issuer = issuer,
                 Subject = subject,
                 Expires = expires,
+                TokenType = "at+jwt",
                 SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
                 {
                     CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
@@ -263,9 +265,129 @@ namespace RC.Identity.API.CryptoHandlers
             return refreshToken;
         }
 
+        public async Task<string> CreateJwtRefreshTokenAsync(string issuer, ClaimsIdentity? subject, DateTime expires)
+        {
+            // Recupera chave do cache em memória
+            var privateKey = _memoryCache.Get<string>("privateKey");
+
+            // Se não existir, recupera chave privada mais recente da base
+            if (privateKey == null)
+            {
+                var key = await _repository.GetCurrentPrivateKeyAsync();
+
+                privateKey = key?.PrivateKey;
+
+                // Se não existir, cria um par de chaves novo
+                if (privateKey == null)
+                {
+                    await CreateKeysAsync();
+
+                    key = await _repository.GetCurrentPrivateKeyAsync();
+
+                    privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
+                }
+
+                // Salva no cache por 15 minutos
+                _memoryCache.Set("privateKey", privateKey, TimeSpan.FromMinutes(15));
+            }
+
+            // Converte de Base64Url para bytes
+            var privateKeyBytes = Convert.FromBase64String(privateKey);
+
+
+            // Instancia um novo RSA
+            using var rsa = RSA.Create();
+
+            // Importa a chave privada
+            rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            // Cria o token com as credenciais de assinatura
+            // RSA como criptografia de chave e SHA256 como função de hash
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            {
+                // Exemplo 1: https://auth.rentcomputer.api
+                // Exemplo 2: http://localhost:7321
+                Issuer = issuer,
+                Subject = subject,
+                Expires = expires,
+                TokenType = "rt+jwt",
+                Audience = "refresh-token",
+                SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
+                {
+                    CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
+                }
+            });
+
+            // Assina o token com o SigningCredentials
+            // e retorna um JWS que atuará como Refresh Token
+            return tokenHandler.WriteToken(token);
+        }
+
         public async Task<RefreshToken?> GetRefreshToken(Guid refreshToken)
         {
             return await _repository.GetRefreshTokenAsync(refreshToken);
+        }
+
+        public async Task<string?> GetSubjectFromJwtRefreshToken(string refreshToken)
+        {
+            // Recupera chave do cache em memória
+            var privateKey = _memoryCache.Get<string>("privateKey");
+
+            // Se não existir, recupera chave privada mais recente da base
+            if (privateKey == null)
+            {
+                var key = await _repository.GetCurrentPrivateKeyAsync();
+
+                privateKey = key?.PrivateKey;
+
+                // Se não existir, cria um par de chaves novo
+                if (privateKey == null)
+                {
+                    await CreateKeysAsync();
+
+                    key = await _repository.GetCurrentPrivateKeyAsync();
+
+                    privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
+                }
+
+                // Salva no cache por 15 minutos
+                _memoryCache.Set("privateKey", privateKey, TimeSpan.FromMinutes(15));
+            }
+
+            // Converte de Base64Url para bytes
+            var privateKeyBytes = Convert.FromBase64String(privateKey);
+
+
+            // Instancia um novo RSA
+            using var rsa = RSA.Create();
+
+            // Importa a chave privada
+            rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
+
+            var signKey = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
+            {
+                CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
+            };
+
+            var tokenHandler = new JsonWebTokenHandler();
+
+            // Valida a assinatura do refresh token
+            var result = tokenHandler.ValidateToken(refreshToken, new TokenValidationParameters()
+            {
+                ValidIssuer = "https://localhost:7241",
+                ValidAudience = "refresh-token",
+                RequireSignedTokens = true,
+                IssuerSigningKey = signKey.Key
+            });
+
+            if (result.IsValid)
+            {
+                return result.Claims["email"].ToString();
+            };
+
+            return null;
         }
     }
 }
