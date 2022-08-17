@@ -15,7 +15,7 @@ namespace RC.Identity.API.Configurations
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(dataBaseSettings.ConnectionString));
 
-            services.AddScoped<ISecurityKeyRepository, SecurityKeyRepository>();
+            services.AddScoped<IRepository, Repository>();
 
             return services;
         }

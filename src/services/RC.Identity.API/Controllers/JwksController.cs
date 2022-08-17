@@ -8,18 +8,18 @@ namespace RC.Identity.API.Controllers
     [ApiController]
     public class JwksController : MainController
     {
-        private readonly ISecurityKeyRepository _securityKeyRepository;
+        private readonly IRepository _repository;
 
-        public JwksController(ISecurityKeyRepository securityKeyRepository)
+        public JwksController(IRepository securityKeyRepository)
         {
-            _securityKeyRepository = securityKeyRepository;
+            _repository = securityKeyRepository;
         }
 
         [HttpGet]
         [Route("jwks")]
         public JsonWebKeySetViewModel ListKeys()
         {
-            var keys = _securityKeyRepository.GetRecentKeys();
+            var keys = _repository.GetRecentKeys();
 
             return new JsonWebKeySetViewModel()
             {

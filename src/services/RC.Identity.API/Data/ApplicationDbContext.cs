@@ -11,6 +11,7 @@ namespace RC.Identity.API.Data
         private readonly IOptions<DataBaseSettings> _databaseSettings;
         public DbSet<JwtSecurityKey> SecurityKeys { get; set; }
         public DbSet<JwtPrivateKey> PrivateKey { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IOptions<DataBaseSettings> databaseSettings) : base(options)
         {

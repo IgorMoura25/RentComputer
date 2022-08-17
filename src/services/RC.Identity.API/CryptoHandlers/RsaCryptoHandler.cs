@@ -14,13 +14,13 @@ namespace RC.Identity.API.CryptoHandlers
 {
     public class RsaCryptoHandler : ICryptoHandler
     {
-        private readonly ISecurityKeyRepository _securityKeyRepository;
+        private readonly IRepository _repository;
         private readonly IMemoryCache _memoryCache;
         private readonly IDistributedCache _distributedCache;
 
-        public RsaCryptoHandler(ISecurityKeyRepository securityKeyRepository, IMemoryCache memoryCache, IDistributedCache distributedCache)
+        public RsaCryptoHandler(IRepository securityKeyRepository, IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
-            _securityKeyRepository = securityKeyRepository;
+            _repository = securityKeyRepository;
             _memoryCache = memoryCache;
             _distributedCache = distributedCache;
         }
@@ -33,7 +33,7 @@ namespace RC.Identity.API.CryptoHandlers
             // Se não existir, recupera chave privada mais recente da base
             if (privateKey == null)
             {
-                var key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                var key = await _repository.GetCurrentPrivateKeyAsync();
 
                 privateKey = key?.PrivateKey;
 
@@ -42,7 +42,7 @@ namespace RC.Identity.API.CryptoHandlers
                 {
                     await CreateKeysAsync();
 
-                    key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                    key = await _repository.GetCurrentPrivateKeyAsync();
 
                     privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
                 }
@@ -91,7 +91,7 @@ namespace RC.Identity.API.CryptoHandlers
             // Se não existir, recupera chave privada mais recente da base
             if (privateKey == null)
             {
-                var key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                var key = await _repository.GetCurrentPrivateKeyAsync();
 
                 privateKey = key?.PrivateKey;
 
@@ -100,7 +100,7 @@ namespace RC.Identity.API.CryptoHandlers
                 {
                     await CreateKeysAsync();
 
-                    key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                    key = await _repository.GetCurrentPrivateKeyAsync();
 
                     privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
                 }
@@ -152,7 +152,7 @@ namespace RC.Identity.API.CryptoHandlers
             // Se não existir, recupera chave privada mais recente da base
             if (privateKey == null)
             {
-                var key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                var key = await _repository.GetCurrentPrivateKeyAsync();
 
                 privateKey = key?.PrivateKey;
 
@@ -161,7 +161,7 @@ namespace RC.Identity.API.CryptoHandlers
                 {
                     await CreateKeysAsync();
 
-                    key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+                    key = await _repository.GetCurrentPrivateKeyAsync();
 
                     privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
                 }
@@ -225,7 +225,7 @@ namespace RC.Identity.API.CryptoHandlers
             // Salva na base
             var now = DateTime.UtcNow;
 
-            await _securityKeyRepository.AddAsync(new JwtSecurityKey()
+            await _repository.AddSecurityKeyAsync(new JwtSecurityKey()
             {
                 KeyId = keyId,
                 CreationDate = now,
@@ -243,11 +243,29 @@ namespace RC.Identity.API.CryptoHandlers
                 }),
             });
 
-            await _securityKeyRepository.AddPrivateKeyAsync(new JwtPrivateKey()
+            await _repository.AddPrivateKeyAsync(new JwtPrivateKey()
             {
                 PrivateKey = privateKeyBuffer.ToString(),
                 CreationDate = now
             });
+        }
+
+        public async Task<RefreshToken> CreateRefreshTokenAsync(string email)
+        {
+            var refreshToken = new RefreshToken
+            {
+                UserName = email,
+                ExpirationDate = DateTime.UtcNow.AddHours(8)
+            };
+
+            await _repository.AddRefreshTokenAsync(refreshToken);
+
+            return refreshToken;
+        }
+
+        public async Task<RefreshToken?> GetRefreshToken(Guid refreshToken)
+        {
+            return await _repository.GetRefreshTokenAsync(refreshToken);
         }
     }
 }

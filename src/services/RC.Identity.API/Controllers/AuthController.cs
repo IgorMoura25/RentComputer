@@ -45,7 +45,16 @@ namespace RC.Identity.API.Controllers
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return CustomResponse(await GenerateJwt(model.Email));
+                var accessToken = await GenerateJwt(model.Email);
+                var refreshToken = await _cryptoHandler.CreateRefreshTokenAsync(model.Email);
+
+                var response = new
+                {
+                    access_token = accessToken,
+                    refreshToken = refreshToken.Token
+                };
+
+                return CustomResponse(response);
             }
 
             foreach (var error in result.Errors)
@@ -66,7 +75,16 @@ namespace RC.Identity.API.Controllers
 
             if (result.Succeeded && model.Email != null)
             {
-                return CustomResponse(await GenerateJwt(model.Email));
+                var accessToken = await GenerateJwt(model.Email);
+                var refreshToken = await _cryptoHandler.CreateRefreshTokenAsync(model.Email);
+
+                var response = new
+                {
+                    access_token = accessToken,
+                    refreshToken = refreshToken.Token
+                };
+
+                return CustomResponse(response);
             }
 
             if (result.IsLockedOut)
@@ -94,6 +112,38 @@ namespace RC.Identity.API.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Route("refresh-token/{refreshToken}")]
+        public async Task<IActionResult> GetAccessTokenByRefreshToken([FromRoute] Guid refreshToken)
+        {
+            var token = await _cryptoHandler.GetRefreshToken(refreshToken);
+
+            // Refresh Token inválido / não encontrado
+            if (token == null)
+            {
+                AddError("Invalid refresh token");
+                return CustomResponse();
+            }
+
+            // Refresh Token expirado
+            if (token.ExpirationDate <= DateTime.UtcNow)
+            {
+                AddError("Expired refresh token");
+                return CustomResponse();
+            }
+
+            // Refresh Token válido para gerar novo access token (jwt)
+            var accessToken = await GenerateJwt(token.UserName);
+            var newRefreshToken = await _cryptoHandler.CreateRefreshTokenAsync(token.UserName);
+
+            var response = new
+            {
+                access_token = accessToken,
+                refreshToken = newRefreshToken.Token
+            };
+
+            return CustomResponse(response);
+        }
 
         private async Task<string> GenerateJwt(string userEmail)
         {

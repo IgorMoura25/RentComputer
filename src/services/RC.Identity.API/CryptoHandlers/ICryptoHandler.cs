@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using RC.Identity.API.Models;
 
 namespace RC.Identity.API.CryptoHandlers
 {
@@ -8,5 +9,7 @@ namespace RC.Identity.API.CryptoHandlers
         Task<string> CreateJwtTokenFromDistributedCacheAsync(string issuer, ClaimsIdentity? subject, DateTime expires);
         Task CreateKeysAsync();
         Task<bool> ValidateJweCreditCardAsync(string jwe);
+        Task<RefreshToken> CreateRefreshTokenAsync(string email);
+        Task<RefreshToken?> GetRefreshToken(Guid refreshToken);
     }
 }
