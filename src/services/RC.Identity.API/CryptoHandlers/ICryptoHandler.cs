@@ -7,5 +7,6 @@ namespace RC.Identity.API.CryptoHandlers
         Task<string> CreateJwtTokenAsync(string issuer, ClaimsIdentity? subject, DateTime expires);
         Task<string> CreateJwtTokenFromDistributedCacheAsync(string issuer, ClaimsIdentity? subject, DateTime expires);
         Task CreateKeysAsync();
+        Task<bool> ValidateJweCreditCardAsync(string jwe);
     }
 }

@@ -80,6 +80,21 @@ namespace RC.Identity.API.Controllers
             return CustomResponse();
         }
 
+        [HttpGet]
+        [Route("validate-cc")]
+        public async Task<IActionResult> ValidateCreditCardAsync([FromQuery] string jwe)
+        {
+            var result = await _cryptoHandler.ValidateJweCreditCardAsync(jwe);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+
         private async Task<string> GenerateJwt(string userEmail)
         {
             // Gera um token passando um emissor, as claims

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using RC.Identity.API.Data.Repositories;
 using RC.Identity.API.Models;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace RC.Identity.API.CryptoHandlers
 {
@@ -141,6 +142,68 @@ namespace RC.Identity.API.CryptoHandlers
             // Assina o token com o SigningCredentials
             // e retorna um JWS
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<bool> ValidateJweCreditCardAsync(string jwe)
+        {
+            // Recupera chave do cache em memória
+            var privateKey = _memoryCache.Get<string>("privateKey");
+
+            // Se não existir, recupera chave privada mais recente da base
+            if (privateKey == null)
+            {
+                var key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                privateKey = key?.PrivateKey;
+
+                // Se não existir, cria um par de chaves novo
+                if (privateKey == null)
+                {
+                    await CreateKeysAsync();
+
+                    key = await _securityKeyRepository.GetCurrentPrivateKeyAsync();
+
+                    privateKey = key?.PrivateKey ?? throw new NullReferenceException("Failed to provide a private key");
+                }
+
+                // Salva no cache por 15 minutos
+                _memoryCache.Set("privateKey", privateKey, TimeSpan.FromMinutes(15));
+            }
+
+            // Converte de Base64Url para bytes
+            var privateKeyBytes = Convert.FromBase64String(privateKey);
+
+            // Instancia um novo RSA
+            using var rsa = RSA.Create();
+
+            // Importa a chave privada
+            rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
+
+            // Cria uma nova credencial de encriptação usando os algoritmos recomendados
+            var decryptKey = new EncryptingCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaOAEP, SecurityAlgorithms.Aes128CbcHmacSha256);
+
+            var tokenHandler = new JsonWebTokenHandler();
+
+            // Valida e já descriptografa o JWE recebido
+            var result = tokenHandler.ValidateToken(jwe, new TokenValidationParameters()
+            {
+                ValidIssuer = "https://localhost:7241",
+                ValidAudience = "cartao-credito",
+                RequireSignedTokens = false,
+                TokenDecryptionKey = decryptKey.Key
+            });
+
+            var isValid = result.IsValid;
+
+            // Se for válido, acessa as claims
+            // onde uma delas é o cartão de crédito
+            if (isValid)
+            {
+                var claims = result.Claims;
+            }
+
+            // Retorna se é válido
+            return isValid;
         }
 
         public async Task CreateKeysAsync()
