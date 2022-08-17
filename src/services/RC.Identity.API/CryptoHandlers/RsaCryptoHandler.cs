@@ -378,9 +378,23 @@ namespace RC.Identity.API.CryptoHandlers
             {
                 ValidIssuer = "https://localhost:7241",
                 ValidAudience = "refresh-token",
-                RequireSignedTokens = true,
+                RequireSignedTokens = false,
                 IssuerSigningKey = signKey.Key
             });
+
+            if (!result.IsValid)
+            {
+                tokenHandler = new JsonWebTokenHandler();
+
+                // Valida a assinatura do refresh token
+                result = tokenHandler.ValidateToken(refreshToken, new TokenValidationParameters()
+                {
+                    ValidIssuer = "https://localhost:7241",
+                    ValidAudience = "refresh-token",
+                    RequireSignedTokens = false,
+                    IssuerSigningKey = signKey.Key
+                });
+            }
 
             if (result.IsValid)
             {
