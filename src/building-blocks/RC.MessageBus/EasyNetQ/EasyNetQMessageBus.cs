@@ -3,6 +3,7 @@ using EasyNetQ;
 using EasyNetQ.Internals;
 using RabbitMQ.Client.Exceptions;
 using RC.Core.Messages;
+using RC.Core.Messages.IntegrationEvents;
 
 namespace RC.MessageBus.EasyNetQ
 {
@@ -85,6 +86,14 @@ namespace RC.MessageBus.EasyNetQ
             return await _bus.Rpc.RequestAsync<TRequest, TResponse>(request);
         }
 
+        public async Task<TResponse> RequestIntegrationAsync<TRequest, TResponse>(TRequest request)
+            where TRequest : IntegrationEvent
+            where TResponse : ResponseIntegrationMessage
+        {
+            TryConnect();
+            return await _bus.Rpc.RequestAsync<TRequest, TResponse>(request);
+        }
+
         public IDisposable Respond<TRequest, TResponse>(Func<TRequest, TResponse> responder) where TRequest : Command
         {
             TryConnect();
@@ -92,6 +101,14 @@ namespace RC.MessageBus.EasyNetQ
         }
 
         public AwaitableDisposable<IDisposable> RespondAsync<TRequest, TResponse>(Func<TRequest, Task<TResponse>> responder) where TRequest : Command
+        {
+            TryConnect();
+            return _bus.Rpc.RespondAsync(responder);
+        }
+
+        public AwaitableDisposable<IDisposable> RespondIntegrationAsync<TRequest, TResponse>(Func<TRequest, Task<TResponse>> responder)
+            where TRequest : IntegrationEvent
+            where TResponse : ResponseIntegrationMessage
         {
             TryConnect();
             return _bus.Rpc.RespondAsync(responder);

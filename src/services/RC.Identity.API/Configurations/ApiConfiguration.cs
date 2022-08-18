@@ -1,4 +1,6 @@
-﻿using RC.WebAPI.Core.Auth;
+﻿using RC.MessageBus;
+using RC.MessageBus.Configuration;
+using RC.WebAPI.Core.Auth;
 
 namespace RC.Identity.API.Configurations
 {
@@ -9,6 +11,7 @@ namespace RC.Identity.API.Configurations
             services.AddControllers();
 
             var dataBaseSettings = configuration.GetSection(nameof(DataBaseSettings)).Get<DataBaseSettings>();
+            var messageBusSettings = configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
             services.Configure<JwtConfigurationOptions>(configuration.GetSection("JwtConfiguration"));
 
             services
@@ -16,6 +19,7 @@ namespace RC.Identity.API.Configurations
                 .RegisterDataServices(dataBaseSettings)
                 .AddIdentity()
                 .AddJwtSigningCryptographyConfiguration(JwtSigningCryptography.Rsa)
+                .AddMessageBusOrDefault(messageBusSettings.IntegrationConnectionString, MessageBusProviderEnum.EasyNetQ)
                 .AddMemoryCache()
                 .AddDistributedRedisCache(options =>
                 {

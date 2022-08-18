@@ -5,7 +5,7 @@ namespace RC.MessageBus.Configuration
 {
     public static class MessageBusConfiguration
     {
-        public static IServiceCollection AddMessageBusOrDefault(this IServiceCollection services, string connection, MessageBusProviderEnum? provider = null)
+        public static IServiceCollection AddMessageBusOrDefault(this IServiceCollection services, string? connection, MessageBusProviderEnum? provider = null)
         {
             if (string.IsNullOrEmpty(connection) || string.IsNullOrWhiteSpace(connection))
             {

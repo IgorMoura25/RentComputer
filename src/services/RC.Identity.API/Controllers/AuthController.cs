@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using RC.Core.Messages.IntegrationEvents;
 using RC.Identity.API.Configurations;
 using RC.Identity.API.CryptoHandlers;
 using RC.Identity.API.Models;
+using RC.MessageBus.EasyNetQ;
 using RC.WebAPI.Core;
 
 namespace RC.Identity.API.Controllers
@@ -17,13 +19,20 @@ namespace RC.Identity.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ICryptoHandler _cryptoHandler;
         private readonly IOptions<JwtConfigurationOptions> _options;
+        private readonly IEasyNetQBus _messageBus;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ICryptoHandler cryptoHandler, IOptions<JwtConfigurationOptions> options)
+        public AuthController(
+            SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager,
+            ICryptoHandler cryptoHandler,
+            IOptions<JwtConfigurationOptions> options,
+            IEasyNetQBus messageBus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _cryptoHandler = cryptoHandler;
             _options = options;
+            _messageBus = messageBus;
         }
 
         [HttpPost]
@@ -43,6 +52,28 @@ namespace RC.Identity.API.Controllers
 
             if (result.Succeeded && model.Email != null)
             {
+                var addedUser = await _userManager.FindByNameAsync(model.Email);
+
+                // Conversa com outras API's avisando que o usuário foi criado
+                var integrationResponse = await _messageBus.RequestIntegrationAsync<UserCreatedIntegrationEvent, ResponseIntegrationMessage>
+                    (new UserCreatedIntegrationEvent(Guid.Parse(addedUser.Id), addedUser.UserName, addedUser.Email, "57465830060", true, DateTime.UtcNow));
+
+                // Se deu algum erro com a criação do cliente, deleta usuário
+                if (!integrationResponse?.ValidationResult?.IsValid ?? false)
+                {
+                    await _userManager.DeleteAsync(user);
+
+                    if (integrationResponse?.ValidationResult?.Errors?.Count > 0)
+                    {
+                        foreach (var error in integrationResponse.ValidationResult.Errors)
+                        {
+                            AddError(error.ErrorMessage);
+                        }
+
+                        return CustomResponse();
+                    }
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
                 var accessToken = await GenerateJwt(model.Email);

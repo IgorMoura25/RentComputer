@@ -1,4 +1,8 @@
-﻿namespace RC.Customer.API.Configurations
+﻿using RC.Customer.API.Services;
+using RC.MessageBus;
+using RC.MessageBus.Configuration;
+
+namespace RC.Customer.API.Configurations
 {
     public static class ApiConfiguration
     {
@@ -7,6 +11,12 @@
             services.AddControllers();
 
             services.RegisterServices(configuration);
+
+            var messageBusSettings = configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
+
+            services.AddHostedService<CustomerIntegrationHandler>();
+
+            services.AddMessageBusOrDefault(messageBusSettings.IntegrationConnectionString, MessageBusProviderEnum.EasyNetQ);
 
             services.RegisterMediatR();
 

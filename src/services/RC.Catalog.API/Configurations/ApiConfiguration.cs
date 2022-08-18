@@ -1,6 +1,4 @@
-﻿using RC.MessageBus;
-using RC.MessageBus.Configuration;
-using RC.WebAPI.Core.Auth;
+﻿using RC.WebAPI.Core.Auth;
 
 namespace RC.Catalog.API.Configurations
 {
@@ -11,17 +9,14 @@ namespace RC.Catalog.API.Configurations
             services.AddControllers();
 
             services.Configure<DataBaseSettings>(configuration.GetSection(nameof(DataBaseSettings)));
-            services.Configure<MessageBusSettings>(configuration.GetSection(nameof(MessageBusSettings)));
 
             var dataBaseSettings = configuration.GetSection(nameof(DataBaseSettings)).Get<DataBaseSettings>();
-            var messageBusSettings = configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
 
             services
                 .RegisterServices()
                 .RegisterMediatR()
                 .RegisterApplicationServices()
                 .RegisterDataServices(dataBaseSettings)
-                .AddMessageBusOrDefault(messageBusSettings.ConnectionString, MessageBusProviderEnum.EasyNetQ)
                 .AddSwaggerConfiguration()
                 .AddJwtConfiguration();
         }
