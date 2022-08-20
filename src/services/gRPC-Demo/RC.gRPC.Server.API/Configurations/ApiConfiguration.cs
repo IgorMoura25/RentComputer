@@ -1,10 +1,14 @@
-﻿namespace RC.gRPC.Server.API.Configurations
+﻿using RC.gRPC.Server.API.Services;
+
+namespace RC.gRPC.Server.API.Configurations
 {
     public static class ApiConfiguration
     {
         public static IServiceCollection AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
+
+            services.AddGrpc();
 
             services
                 .AddSwaggerConfiguration()
@@ -31,6 +35,7 @@
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<CatalogGrpcService>();
             });
         }
     }

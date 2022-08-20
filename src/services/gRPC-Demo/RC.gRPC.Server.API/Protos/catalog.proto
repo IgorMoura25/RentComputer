@@ -1,5 +1,7 @@
 // Language Guide: https://developers.google.com/protocol-buffers/docs/proto3
 
+// O protobuf é como se fosse uma interface/schema
+
 syntax = "proto3";
 
 option csharp_namespace = "RC.gRPC.Server.API.Protos";
@@ -24,6 +26,10 @@ message ListProductsRequest {
 
 // Um de para de tipos C# x protobuf pode ser encontrado em https://docs.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types
 message ListProductsResponse{
+    repeated ProductResponse products = 1;
+}
+
+message ProductResponse {
     string id = 1;
     string productguid = 2;
     string name = 3;
