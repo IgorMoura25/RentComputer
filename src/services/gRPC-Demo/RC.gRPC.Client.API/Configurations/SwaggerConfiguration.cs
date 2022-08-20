@@ -10,8 +10,8 @@ namespace RC.gRPC.Client.API.Configurations
             {
                 options.SwaggerDoc("v1", new OpenApiInfo()
                 {
-                    Title = "RentComputer Enterprise gRPC Server API",
-                    Description = "This is the RentComputer gRPC Server API",
+                    Title = "RentComputer Enterprise gRPC Client API",
+                    Description = "This is the RentComputer gRPC Client API",
                     Contact = new OpenApiContact()
                     {
                         Name = "Igor Moura",

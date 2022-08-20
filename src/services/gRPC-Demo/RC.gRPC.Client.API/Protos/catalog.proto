@@ -1,0 +1,48 @@
+// Language Guide: https://developers.google.com/protocol-buffers/docs/proto3
+
+// O protobuf é como se fosse uma interface/schema
+
+syntax = "proto3";
+
+option csharp_namespace = "RC.gRPC.Client.API.Protos";
+
+package CatalogAPI;
+
+// Service é uma interface que define o sistema que será utilizado para a comunicação
+// No exemplo abaixo, trata-se de um service de RPC (Remote Prodecure Call)
+service Catalog {
+	
+	rpc ListProducts(ListProductsRequest) returns (ListProductsResponse) {}
+
+	// Um ou mais métodos...
+	// rpc ListProducts(ListProductsRequest) returns () {}
+}
+
+// O objeto de request que será passado
+// necessário mesmo que vazia
+message ListProductsRequest {
+
+}
+
+// Um de para de tipos C# x protobuf pode ser encontrado em https://docs.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types
+message ListProductsResponse{
+    repeated ProductResponse products = 1;
+}
+
+message ProductResponse {
+    string id = 1;
+    string productguid = 2;
+    string name = 3;
+    string description = 4;
+    double value = 5;
+    int32 quantity = 6;
+    bool isactive = 7;
+
+    // Lista
+    // repeated {tipo} {nome} = {índice}
+    // repeated Voucher vouchers = 7
+
+    // Tipo complexo
+    // {tipo} {nome} = {índice}
+    // Voucher voucher = 7
+}

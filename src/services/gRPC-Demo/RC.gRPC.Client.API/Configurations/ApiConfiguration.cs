@@ -8,6 +8,7 @@
 
             services
                 .AddSwaggerConfiguration()
+                .ConfigureGrpcServices(configuration)
                 .RegisterServices();
 
             return services;
