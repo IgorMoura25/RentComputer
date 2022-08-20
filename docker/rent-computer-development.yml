@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+
+  api-identity:
+    image: igormoura2501/rent-computer-identity-api:latest
+    container_name: rent-computer-identity-api
+    build:
+      context: ../src
+      dockerfile: ./services/RC.Identity.API/Dockerfile
+    ports:
+      - "5241:5241"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://localhost:5241

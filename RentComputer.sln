@@ -33,9 +33,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.CreditCard.Console", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gRPC-Demo", "gRPC-Demo", "{1A447C71-C783-424C-8816-907CD125410D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RC.gRPC.Server.API", "src\services\gRPC-Demo\RC.gRPC.Server.API\RC.gRPC.Server.API.csproj", "{0D56D867-0279-44BB-88DF-A523C567D71E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.gRPC.Server.API", "src\services\gRPC-Demo\RC.gRPC.Server.API\RC.gRPC.Server.API.csproj", "{0D56D867-0279-44BB-88DF-A523C567D71E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RC.gRPC.Client.API", "src\services\gRPC-Demo\RC.gRPC.Client.API\RC.gRPC.Client.API.csproj", "{7B20F22B-5775-495A-A045-AF7EAD2376EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.gRPC.Client.API", "src\services\gRPC-Demo\RC.gRPC.Client.API\RC.gRPC.Client.API.csproj", "{7B20F22B-5775-495A-A045-AF7EAD2376EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
