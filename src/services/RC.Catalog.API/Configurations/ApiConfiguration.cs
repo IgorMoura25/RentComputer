@@ -9,8 +9,10 @@ namespace RC.Catalog.API.Configurations
             services.AddControllers();
 
             services.Configure<DataBaseSettings>(configuration.GetSection(nameof(DataBaseSettings)));
+            services.Configure<JwtConfigurationSettings>(configuration.GetSection(nameof(JwtConfigurationSettings)));
 
             var dataBaseSettings = configuration.GetSection(nameof(DataBaseSettings)).Get<DataBaseSettings>();
+            var jwtConfigurationSettings = configuration.GetSection(nameof(JwtConfigurationSettings)).Get<JwtConfigurationSettings>();
 
             services
                 .RegisterServices()
@@ -18,7 +20,7 @@ namespace RC.Catalog.API.Configurations
                 .RegisterApplicationServices()
                 .RegisterDataServices(dataBaseSettings)
                 .AddSwaggerConfiguration()
-                .AddJwtConfiguration();
+                .AddJwtConfiguration(jwtConfigurationSettings.RetrievalUrl, jwtConfigurationSettings.RequiredHttps);
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)

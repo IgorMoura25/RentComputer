@@ -6,7 +6,7 @@ namespace RC.WebAPI.Core.Auth
 {
     public static class JwtConfiguration
     {
-        public static IServiceCollection AddJwtConfiguration(this IServiceCollection services)
+        public static IServiceCollection AddJwtConfiguration(this IServiceCollection services, string? retrievalUrl, bool httpsRequired)
         {
             services
                 .AddAuthentication(options =>
@@ -16,7 +16,7 @@ namespace RC.WebAPI.Core.Auth
                 }).
                 AddJwtBearer(options =>
                 {
-                    options.SetJwksRetrieverOptions("https://localhost:7241/jwks");
+                    options.SetJwksRetrieverOptions(retrievalUrl, httpsRequired);
                 });
 
             return services;

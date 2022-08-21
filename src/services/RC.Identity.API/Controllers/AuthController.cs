@@ -20,19 +20,22 @@ namespace RC.Identity.API.Controllers
         private readonly ICryptoHandler _cryptoHandler;
         private readonly IOptions<JwtConfigurationOptions> _options;
         private readonly IEasyNetQBus _messageBus;
+        private readonly ILogger<AuthController> _logger;
 
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             ICryptoHandler cryptoHandler,
             IOptions<JwtConfigurationOptions> options,
-            IEasyNetQBus messageBus)
+            IEasyNetQBus messageBus,
+            ILogger<AuthController> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _cryptoHandler = cryptoHandler;
             _options = options;
             _messageBus = messageBus;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -54,6 +57,8 @@ namespace RC.Identity.API.Controllers
             {
                 var addedUser = await _userManager.FindByNameAsync(model.Email);
 
+                _logger.LogInformation("Starting RPC with others API");
+
                 // Conversa com outras API's avisando que o usuário foi criado
                 var integrationResponse = await _messageBus.RequestIntegrationAsync<UserCreatedIntegrationEvent, ResponseIntegrationMessage>
                     (new UserCreatedIntegrationEvent(Guid.Parse(addedUser.Id), addedUser.UserName, addedUser.Email, "57465830060", true, DateTime.UtcNow));
@@ -61,6 +66,8 @@ namespace RC.Identity.API.Controllers
                 // Se deu algum erro com a criação do cliente, deleta usuário
                 if (!integrationResponse?.ValidationResult?.IsValid ?? false)
                 {
+                    _logger.LogInformation("RPC failed");
+
                     await _userManager.DeleteAsync(user);
 
                     if (integrationResponse?.ValidationResult?.Errors?.Count > 0)
@@ -73,6 +80,8 @@ namespace RC.Identity.API.Controllers
                         return CustomResponse();
                     }
                 }
+
+                _logger.LogInformation("RPC success");
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
 

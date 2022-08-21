@@ -6,11 +6,11 @@ namespace RC.WebAPI.Core.Auth.Extensions
 {
     public static class JwksExtension
     {
-        public static void SetJwksRetrieverOptions(this JwtBearerOptions options, string? retrievalUrl)
+        public static void SetJwksRetrieverOptions(this JwtBearerOptions options, string? retrievalUrl, bool httpsRequired)
         {
             if (retrievalUrl == null) throw new ArgumentNullException(nameof(retrievalUrl));
 
-            options.RequireHttpsMetadata = true;
+            options.RequireHttpsMetadata = httpsRequired;
 
             // Salva o token buscado, em um cache
             options.SaveToken = true;

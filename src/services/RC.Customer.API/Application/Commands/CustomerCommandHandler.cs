@@ -14,16 +14,20 @@ namespace RC.Customer.API.Application.Commands
         private readonly ICustomerRepository _customerRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly MediatREventList _eventList;
+        private ILogger<CustomerCommandHandler> _logger;
 
-        public CustomerCommandHandler(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, MediatREventList eventList)
+        public CustomerCommandHandler(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, MediatREventList eventList, ILogger<CustomerCommandHandler> logger)
         {
             _customerRepository = customerRepository;
             _unitOfWork = unitOfWork;
             _eventList = eventList;
+            _logger = logger;
         }
 
         public async Task<ValidationResult> Handle(AddCustomerCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("AddCustomerCommand called");
+
             if (!request.IsValid())
             {
                 return request.ValidationResult;

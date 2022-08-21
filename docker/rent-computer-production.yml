@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbit-rent-computer
+    # RabbitMQ necessita de um usuário e senha fora de localhost
+    # e não pode ser admin admin
+    environment:
+      RABBITMQ_DEFAULT_USER: "rentcomputer"
+      RABBITMQ_DEFAULT_PASS: "rentcomputer"
+    # Expondo as portas tradicionais do rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  api-identity:
+    image: igormoura2501/rent-computer-identity-api:latest
+    container_name: rent-computer-identity-api
+    build:
+      context: ../src
+      dockerfile: ./services/RC.Identity.API/Dockerfile
+    ports:
+      - "5241:5241"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:5241
+    depends_on:
+      - rabbitmq
+
+  api-customer:
+    image: igormoura2501/rent-computer-customer-api:latest
+    container_name: rent-computer-customer-api
+    build:
+      context: ../src
+      dockerfile: ./services/RC.Customer.API/Dockerfile
+    ports:
+      - "5004:5004"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:5004
+    depends_on:
+      - rabbitmq
+      - api-identity  
+
+  api-catalog:
+    image: igormoura2501/rent-computer-catalog-api:latest
+    container_name: rent-computer-catalog-api
+    build:
+      context: ../src
+      dockerfile: ./services/RC.Catalog.API/Dockerfile
+    ports:
+      - "5003:5003"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:5003
+    depends_on:
+      - api-identity
