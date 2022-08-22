@@ -33,7 +33,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       # Aqui é a porta da aplicação que está escutando
-      - ASPNETCORE_URLS=http://*:5241
+      # Neste exemplo, escutando http e https
+      - ASPNETCORE_URLS=https://+:7241;http://+:5241
+      # Variáveis de configuração dos certificados SSL para a API trabalhar com https
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=rentcomputer
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/rent-computer-certificate.pfx
+    # Recomendado trabalhar com volumes com os certificados
+    # para não ter que expor os certificados em algum CI/Projeto
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq
 
@@ -78,6 +86,13 @@ services:
       - "5003:5003"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5003
+      - ASPNETCORE_URLS=https://+:6003;http://+:5003
+      # Variáveis de configuração dos certificados SSL para a API trabalhar com https
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=rentcomputer
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/rent-computer-certificate.pfx
+    # Recomendado trabalhar com volumes com os certificados
+    # para não ter que expor os certificados em algum CI/Projeto
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - api-identity
