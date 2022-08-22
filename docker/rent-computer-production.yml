@@ -1,7 +1,9 @@
 version: "3"
 
+# Os containers que irão subir
 services:
 
+  # Filas
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbit-rent-computer
@@ -15,20 +17,42 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  # API de exemplo
   api-identity:
     image: igormoura2501/rent-computer-identity-api:latest
     container_name: rent-computer-identity-api
     build:
+      # O contexto do docker-compose (de onde irá partir os comandos)
       context: ../src
       dockerfile: ./services/RC.Identity.API/Dockerfile
+    # As portas físicas em que o container: está escutando / está expondo
+    # Neste exemplo estamos expondo as portas, mas na realidade é melhor não expor
+    # para que não fique acessível pela internet
     ports:
       - "5241:5241"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      # Aqui é a porta da aplicação que está escutando
       - ASPNETCORE_URLS=http://*:5241
     depends_on:
       - rabbitmq
 
+  # Proxy Reverso
+  # Neste exemplo, o proxy reverso está na frente da Identity API
+  # apenas como forma didática por não ter uma app frontend
+  rent-computer-server:
+    image: igormoura2501/rent-computer-server:latest
+    container_name: rent-computer-server
+    build:
+      context: ./
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api-identity
+
+  # Demais API's
   api-customer:
     image: igormoura2501/rent-computer-customer-api:latest
     container_name: rent-computer-customer-api

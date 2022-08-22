@@ -1,4 +1,5 @@
-﻿using RC.MessageBus;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using RC.MessageBus;
 using RC.MessageBus.Configuration;
 using RC.WebAPI.Core.Auth;
 
@@ -13,6 +14,11 @@ namespace RC.Identity.API.Configurations
             var dataBaseSettings = configuration.GetSection(nameof(DataBaseSettings)).Get<DataBaseSettings>();
             var messageBusSettings = configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
             services.Configure<JwtConfigurationOptions>(configuration.GetSection("JwtConfiguration"));
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
 
             services
                 .AddSwaggerConfiguration()
@@ -32,6 +38,8 @@ namespace RC.Identity.API.Configurations
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
