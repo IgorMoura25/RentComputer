@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { rootRouterConfig } from './app.routes';
 import { HeaderComponent } from './layout/header/header.component';
 import { HomeComponent } from './home/home.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { CatalogService } from './services/catalog/catalog.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -27,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    ReactiveFormsModule,
     [RouterModule.forRoot(rootRouterConfig, { useHash: false })]
   ],
   providers: [

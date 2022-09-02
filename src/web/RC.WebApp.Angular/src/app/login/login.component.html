@@ -1,27 +1,29 @@
-<h1>Página de login</h1>
-<h3>Data Bindings:</h3>
-<label>Interpolation: {{numberToDisplay}}</label>
+<div class="container main-container">
+    <h4>Login</h4>
+    <hr />
+    <form novalidate (ngSubmit)="login()" [formGroup]="loginForm">
+        <div class="form-horizontal">
 
-<br>
-<br>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="email">E-mail</label>
+                <div class="col-md-10">
+                    <input class="form-control" id="email" type="text" placeholder="Email (requerido)" formControlName="email"/>
+                </div>
+            </div>
 
-<label>Property Binding 1: <button class="btn btn-info" [disabled]="numberToDisplay >= 10">Info</button></label>
+            <div class="form-group" style="padding-top: 10px;">
+                <label class="col-md-2 control-label" for="password">Senha</label>
+                <div class="col-md-10">
+                    <input class="form-control" id="password" type="text" placeholder="Senha (requerido)" formControlName="password" />
+                </div>
+            </div>
 
-<br>
-<br>
+            <div class="form-group" style="padding-top: 10px;">
+                <div class="col-md-4 col-md-offset-2">
+                    <span><button class="btn btn-success" id="login" type="submit">Acessar</button></span>
+                </div>
+            </div>
 
-<label>Property Binding 2: <img [src]="minhaUrl"/></label>
-
-<br>
-<br>
-
-<label>Event Binding: <button class="btn btn-warning" (click)="incrementNumbertToDisplay()">Clique-me</button></label>
-
-<br>
-<br>
-
-<label>Two Way Binding: <input type="text" [(ngModel)]="name" placeholder="Digite seu nome"></label>
-
-<br>
-<br>
-<label>Seu nome é: {{name}}</label>
+        </div>
+    </form>
+</div>
