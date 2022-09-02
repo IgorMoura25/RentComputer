@@ -5,7 +5,7 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -17,6 +17,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2017",
+    "noImplicitUseStrict": true,
     "module": "es2020",
     "lib": [
       "es2020",

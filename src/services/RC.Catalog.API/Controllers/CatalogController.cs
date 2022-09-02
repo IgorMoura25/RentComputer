@@ -29,6 +29,14 @@ namespace RC.Catalog.API.Controllers
             return CustomResponse(await _productQueries.GetAllAsync());
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("products-anonymous")]
+        public async Task<ActionResult> ListProductsAnonymousAsync()
+        {
+            return CustomResponse(await _productQueries.GetAllAsync());
+        }
+
         [HttpPost]
         [Route("product")]
         public async Task<IActionResult> AddProductAsync([FromBody] AddProductViewRequestModel model)

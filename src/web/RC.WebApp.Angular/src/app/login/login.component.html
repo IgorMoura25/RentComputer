@@ -1,1 +1,27 @@
-página de login
+<h1>Página de login</h1>
+<h3>Data Bindings:</h3>
+<label>Interpolation: {{numberToDisplay}}</label>
+
+<br>
+<br>
+
+<label>Property Binding 1: <button class="btn btn-info" [disabled]="numberToDisplay >= 10">Info</button></label>
+
+<br>
+<br>
+
+<label>Property Binding 2: <img [src]="minhaUrl"/></label>
+
+<br>
+<br>
+
+<label>Event Binding: <button class="btn btn-warning" (click)="incrementNumbertToDisplay()">Clique-me</button></label>
+
+<br>
+<br>
+
+<label>Two Way Binding: <input type="text" [(ngModel)]="name" placeholder="Digite seu nome"></label>
+
+<br>
+<br>
+<label>Seu nome é: {{name}}</label>

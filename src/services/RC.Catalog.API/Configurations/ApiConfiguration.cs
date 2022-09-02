@@ -21,20 +21,31 @@ namespace RC.Catalog.API.Configurations
                 .RegisterDataServices(dataBaseSettings)
                 .AddSwaggerConfiguration()
                 .AddJwtConfiguration(jwtConfigurationSettings.RetrievalUrl, jwtConfigurationSettings.RequiredHttps);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development", builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                });
+            });
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseCors("Development");
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseSwaggerConfiguration();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
 
             app.UseHsts();
 
