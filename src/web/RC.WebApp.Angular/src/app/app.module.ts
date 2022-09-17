@@ -9,26 +9,21 @@ registerLocaleData(localePt);
 import { AppComponent } from './app.component';
 import { AppRoutesModule } from './app-routes.module';
 import { HomeComponent } from './home/home.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LoginComponent } from './login/login.component';
 import { CatalogService } from './services/catalog/catalog.service';
 import { HttpClientModule } from '@angular/common/http';
-import { CustomFormsModule } from 'ng2-validation';
 import { LayoutModule } from './layout/layout.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    LoginComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    CustomFormsModule,
     HttpClientModule,
-    ReactiveFormsModule,
     LayoutModule,
+    FormsModule,
     AppRoutesModule
   ],
   providers: [
