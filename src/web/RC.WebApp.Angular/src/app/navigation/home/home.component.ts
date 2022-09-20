@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CatalogService } from '../services/catalog/catalog.service';
-import { Product } from '../models/product.model';
+import { CatalogService } from '../../services/catalog/catalog.service';
+import { Product } from '../../models/product.model';
+import { AppNavigation } from 'src/app/models/navigation.interface';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-navigation-home',
   templateUrl: 'home.component.html'
 })
 export class HomeComponent implements OnInit {
@@ -13,6 +14,10 @@ export class HomeComponent implements OnInit {
   public numberToDisplay: number = 0;
   public minhaUrl: string = "../../favicon.ico";
   public name: string = "";
+
+  public nav: AppNavigation[] = [
+    { link: '/login', name: 'Login', isExact: true }
+  ];
 
   constructor(private catalogService: CatalogService) { }
 

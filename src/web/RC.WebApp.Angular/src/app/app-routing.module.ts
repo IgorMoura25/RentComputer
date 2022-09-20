@@ -1,12 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { HomeComponent } from "./home/home.component";
+import { NotFoundComponent } from "./navigation/not-found/not-found.component";
 
 export const rootRouterConfig: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
-    { path: 'home', component: HomeComponent },
-    { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) }
+    { path: 'home', loadChildren: () => import('./navigation/navigation.module').then(m => m.NavigationModule) },
+    { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
+
+    { path: '**', component: NotFoundComponent }
 ];
 @NgModule({
     declarations: [
@@ -19,4 +21,4 @@ export const rootRouterConfig: Routes = [
         RouterModule
     ]
 })
-export class AppRoutesModule { }
+export class AppRoutingModule { }

@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CustomFormsModule } from "ng2-validation";
-import { LoginRoutesModule } from "./login-routes.module";
+import { LoginRoutingModule } from "./login-routing.module";
 import { LoginComponent } from "./login.component";
 
 @NgModule({
@@ -14,7 +14,7 @@ import { LoginComponent } from "./login.component";
         FormsModule,
         CustomFormsModule,
         ReactiveFormsModule,
-        LoginRoutesModule
+        LoginRoutingModule
     ],
     exports: [
         LoginComponent,
