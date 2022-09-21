@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CatalogService } from './services/catalog/catalog.service';
 import { HttpClientModule } from '@angular/common/http';
-import { LayoutModule } from './layout/layout.module';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -20,7 +19,6 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    LayoutModule,
     AppRoutingModule
   ],
   providers: [

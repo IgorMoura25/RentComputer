@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { LayoutModule } from "../layout/layout.module";
 import { HomeComponent } from "./home/home.component";
 import { NavigationRoutingModule } from "./navigation-routing.module";
 import { NavigationComponent } from "./navigation.component";
@@ -16,7 +17,8 @@ import { NotFoundComponent } from "./not-found/not-found.component";
     imports: [
         CommonModule,
         FormsModule,
-        NavigationRoutingModule
+        NavigationRoutingModule,
+        LayoutModule
     ],
     exports: [
         NavigationComponent,
