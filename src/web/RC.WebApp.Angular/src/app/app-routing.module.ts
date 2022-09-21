@@ -4,8 +4,9 @@ import { RouterModule, Routes } from "@angular/router";
 import { NotFoundComponent } from "./navigation/not-found/not-found.component";
 
 export const rootRouterConfig: Routes = [
-    { path: '', redirectTo: '/home', pathMatch: 'full' },
-    { path: 'home', loadChildren: () => import('./navigation/navigation.module').then(m => m.NavigationModule) },
+    { path: '', redirectTo: '/menu/home', pathMatch: 'full' },
+    { path: 'menu', redirectTo: '/menu/home', pathMatch: 'full' },
+    { path: 'menu', loadChildren: () => import('./navigation/navigation.module').then(m => m.NavigationModule) },
     { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
 
     { path: '**', component: NotFoundComponent }
