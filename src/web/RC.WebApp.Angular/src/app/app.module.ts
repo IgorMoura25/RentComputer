@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CatalogService } from './services/catalog/catalog.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AuthGuard } from './services/app.guard';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule
   ],
   providers: [
-    CatalogService
+    CatalogService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })
