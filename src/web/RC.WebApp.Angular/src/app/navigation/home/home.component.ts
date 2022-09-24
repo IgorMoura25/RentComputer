@@ -16,7 +16,8 @@ export class HomeComponent implements OnInit {
   public name: string = "";
 
   public nav: AppNavigation[] = [
-    { link: '/login', name: 'Login', isExact: true }
+    { link: '/login', name: 'Login', isExact: true },
+    { link: '/admin', name: 'Admin', isExact: true }
   ];
 
   constructor(private catalogService: CatalogService) { }
