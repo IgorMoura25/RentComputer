@@ -47,6 +47,8 @@
  */
 import 'zone.js';  // Included with Angular CLI.
 
+// Localize
+import '@angular/localize/init';  // Installed as a dependency of NgBootstrap.
 
 /***************************************************************************************************
  * APPLICATION IMPORTS

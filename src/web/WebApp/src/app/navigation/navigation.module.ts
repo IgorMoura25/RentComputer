@@ -2,6 +2,8 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+
 import { CatalogComponent } from "./catalog/catalog.component";
 import { FooterComponent } from "./footer/footer.component";
 import { HeaderComponent } from "./header/header.component";
@@ -16,7 +18,8 @@ import { NotFoundComponent } from "./not-found/not-found.component";
     ],
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        NgbModule
     ],
     providers: [
     ],
