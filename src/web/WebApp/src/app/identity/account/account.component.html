@@ -38,11 +38,11 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Confirme a Senha</label>
             <div class="col-md-10">
-                <input class="form-control" id="confirmPassword" type="password"
-                    placeholder="Confirme a Senha (requerido)" formControlName="confirmPassword"
-                    [ngClass]="{'is-invalid': displayMessages?.['confirmPassword']}" />
-                <span class="text-danger" *ngIf="displayMessages?.['confirmPassword']">
-                    <p [innerHTML]="displayMessages?.['confirmPassword']"></p>
+                <input class="form-control" id="passwordConfirmation" type="password"
+                    placeholder="Confirme a Senha (requerido)" formControlName="passwordConfirmation"
+                    [ngClass]="{'is-invalid': displayMessages?.['passwordConfirmation']}" />
+                <span class="text-danger" *ngIf="displayMessages?.['passwordConfirmation']">
+                    <p [innerHTML]="displayMessages?.['passwordConfirmation']"></p>
                 </span>
             </div>
         </div>

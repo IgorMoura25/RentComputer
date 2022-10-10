@@ -35,7 +35,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
                 pattern: 'A senha precisa ter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial',
                 rangeLength: 'A senha precisa ter entre 8 e 20 caracteres'
             },
-            confirmPassword: {
+            passwordConfirmation: {
                 required: 'Preencha uma senha',
                 pattern: 'A senha precisa ter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial',
                 rangeLength: 'A senha precisa ter entre 8 e 20 caracteres',
@@ -50,12 +50,12 @@ export class AccountComponent implements OnInit, AfterViewInit {
         let passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{4,}$";
 
         let password = new FormControl('', [Validators.required, Validators.pattern(passwordPattern), CustomValidators.rangeLength([8, 20])]);
-        let confirmPassword = new FormControl('', [Validators.required, Validators.pattern(passwordPattern), CustomValidators.rangeLength([8, 20]), CustomValidators.equalTo(password)]);
+        let passwordConfirmation = new FormControl('', [Validators.required, Validators.pattern(passwordPattern), CustomValidators.rangeLength([8, 20]), CustomValidators.equalTo(password)]);
 
         this.registerForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
             password: password,
-            confirmPassword: confirmPassword
+            passwordConfirmation: passwordConfirmation
         });
     }
 
@@ -73,10 +73,14 @@ export class AccountComponent implements OnInit, AfterViewInit {
             this.user = <User>{
                 email: this.registerForm.value.email,
                 password: this.registerForm.value.password,
-                confirmPassword: this.registerForm.value.confirmPassword
+                passwordConfirmation: this.registerForm.value.passwordConfirmation
             };
 
-            this.identityService.registerUser(this.user);
+            this.identityService.registerUser(this.user)
+                .subscribe({
+                    next: (result) => { console.log(result) },
+                    error: (error) => { console.log(error) }
+                });
         }
     }
 }

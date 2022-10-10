@@ -33,21 +33,32 @@ namespace RC.Identity.API.Configurations
                     options.InstanceName = "Demo_RedisCache";
                 });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development", builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                });
+            });
+
             return services;
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseCors("Development");
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseForwardedHeaders();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
 
             app.UseHsts();
 
