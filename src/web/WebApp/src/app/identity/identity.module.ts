@@ -4,11 +4,14 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
 
-import { AccountComponent } from "./account/account.component";
+import { IdentityRoutingModule } from "./identity-routing.module";
+
 import { IdentityComponent } from "./identity.component";
+import { AccountComponent } from "./account/account.component";
 import { LoginComponent } from "./login/login.component";
 
-import { IdentityRoutingModule } from "./identity-routing.module";
+import { IdentityService } from "./services/identity.service";
+import { CustomFormsModule } from "ng2-validation";
 
 @NgModule({
     declarations: [
@@ -23,10 +26,12 @@ import { IdentityRoutingModule } from "./identity-routing.module";
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        CustomFormsModule,
 
         IdentityRoutingModule
     ],
     providers: [
+        IdentityService
     ],
     exports: [
     ]
