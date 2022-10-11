@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { throwError } from "rxjs";
+import { environment } from "src/environments/environment";
 
 import { LocalStorageUtils } from "../utils/local-storage";
 
@@ -7,7 +8,7 @@ export abstract class BaseHttpService {
 
     public LocalStorage = new LocalStorageUtils();
 
-    protected UrlServiceV1: string = "https://localhost:7241/";
+    protected UrlServiceV1: string = environment.authorizationServerUrl;
 
     protected getJsonHeader() {
         return {

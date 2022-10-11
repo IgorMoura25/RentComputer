@@ -1,3 +1,6 @@
 export const environment = {
-  production: true
+  production: true,
+  staging: false,
+  development: false,
+  authorizationServerUrl: "https://localhost:1111/"
 };

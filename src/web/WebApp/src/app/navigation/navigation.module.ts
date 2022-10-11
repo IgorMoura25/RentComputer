@@ -6,6 +6,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { CatalogComponent } from "./catalog/catalog.component";
 import { FooterComponent } from "./footer/footer.component";
+import { HeaderLoginComponent } from "./header-login/header-login.component";
 import { HeaderComponent } from "./header/header.component";
 import { NotFoundComponent } from "./not-found/not-found.component";
 
@@ -14,7 +15,8 @@ import { NotFoundComponent } from "./not-found/not-found.component";
         CatalogComponent,
         FooterComponent,
         HeaderComponent,
-        NotFoundComponent
+        NotFoundComponent,
+        HeaderLoginComponent
     ],
     imports: [
         CommonModule,
@@ -27,7 +29,8 @@ import { NotFoundComponent } from "./not-found/not-found.component";
         CatalogComponent,
         FooterComponent,
         HeaderComponent,
-        NotFoundComponent
+        NotFoundComponent,
+        HeaderLoginComponent
     ]
 })
 export class NavigationModule { }
