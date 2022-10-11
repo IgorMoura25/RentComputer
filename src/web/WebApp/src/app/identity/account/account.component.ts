@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChildren } from "@angular/core";
 import { FormBuilder, FormControl, FormControlName, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 import { CustomValidators } from "ng2-validation";
 import { fromEvent, merge, Observable } from "rxjs";
 
@@ -23,7 +24,10 @@ export class AccountComponent implements OnInit, AfterViewInit {
     validationMessages: ValidationMessages;
     genericFormValidator: GenericFormValidator;
 
-    constructor(private formBuilder: FormBuilder, private identityService: IdentityService) {
+    constructor(
+        private formBuilder: FormBuilder,
+        private identityService: IdentityService,
+        private router: Router) {
 
         this.validationMessages = {
             email: {
@@ -78,9 +82,22 @@ export class AccountComponent implements OnInit, AfterViewInit {
 
             this.identityService.registerUser(this.user)
                 .subscribe({
-                    next: (result) => { console.log(result) },
-                    error: (error) => { console.log(error) }
+                    next: (result) => { this.processSuccess(result); },
+                    error: (fail) => { this.processError(fail); }
                 });
         }
+    }
+
+    processSuccess(response: any) {
+        this.registerForm.reset();
+        this.errors = [];
+
+        this.identityService.LocalStorage.setUserToken(response.access_token);
+
+        this.router.navigate(['/catalog']);
+    }
+
+    processError(fail: any) {
+        this.errors = fail.error.errors;
     }
 }

@@ -1,7 +1,11 @@
 import { HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { throwError } from "rxjs";
 
+import { LocalStorageUtils } from "../utils/local-storage";
+
 export abstract class BaseHttpService {
+
+    public LocalStorage = new LocalStorageUtils();
 
     protected UrlServiceV1: string = "https://localhost:7241/";
 
