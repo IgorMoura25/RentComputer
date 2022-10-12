@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChildren } from "@angular/core";
 import { FormBuilder, FormControl, FormControlName, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { CustomValidators } from "ng2-validation";
 import { fromEvent, merge, Observable } from "rxjs";
+
+import { CustomValidators } from "ng2-validation";
+import { ToastrService } from "ngx-toastr";
 
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
 import { User } from "../models/user.model";
@@ -27,7 +29,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
     constructor(
         private formBuilder: FormBuilder,
         private identityService: IdentityService,
-        private router: Router) {
+        private router: Router,
+        private toastr: ToastrService) {
 
         this.validationMessages = {
             email: {
@@ -94,10 +97,12 @@ export class AccountComponent implements OnInit, AfterViewInit {
 
         this.identityService.LocalStorage.setUserToken(response.access_token);
 
+        this.toastr.success("Registro realizado com sucesso!", "Bem vindo!");
         this.router.navigate(['/catalog']);
     }
 
     processError(fail: any) {
         this.errors = fail.error.errors;
+        this.toastr.error("Ocorreu um erro!", "Opa :(");
     }
 }
