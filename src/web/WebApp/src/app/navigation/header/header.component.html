@@ -1,7 +1,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
         <div class="container">
-            <a class="navbar-brand" href="/">Meus Produtos</a>
+            <a class="navbar-brand" [routerLink]="['/catalog']">Catálogo</a>
             <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" data-toggle="collapse"
                 data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -12,9 +12,6 @@
                 <app-navigation-header-login></app-navigation-header-login>
 
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/">Catálogo</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="#">Fornecedores</a>
                     </li>

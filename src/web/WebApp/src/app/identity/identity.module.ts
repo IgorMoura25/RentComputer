@@ -6,6 +6,8 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { IdentityRoutingModule } from "./identity-routing.module";
 
+import { AccountGuard } from "./services/account.guard";
+
 import { IdentityComponent } from "./identity.component";
 import { AccountComponent } from "./account/account.component";
 import { LoginComponent } from "./login/login.component";
@@ -31,7 +33,8 @@ import { CustomFormsModule } from "ng2-validation";
         IdentityRoutingModule
     ],
     providers: [
-        IdentityService
+        IdentityService,
+        AccountGuard
     ],
     exports: [
     ]

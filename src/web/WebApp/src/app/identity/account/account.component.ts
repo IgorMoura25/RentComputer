@@ -19,6 +19,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
     user: User;
     registerForm: FormGroup;
     errors: any[] = [];
+    hasUnsavedChanges: boolean;
 
     @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
@@ -73,6 +74,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
         merge(...controlBlurs).subscribe(() => {
             this.displayMessages = this.genericFormValidator.processMessages(this.registerForm);
         });
+
+        this.hasUnsavedChanges = true;
     }
 
     registerUser() {
@@ -97,6 +100,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
 
         this.identityService.LocalStorage.setUserToken(response.access_token);
 
+        this.hasUnsavedChanges = false;
         this.toastr.success("Registro realizado com sucesso!", "Bem vindo!");
         this.router.navigate(['/catalog']);
     }
