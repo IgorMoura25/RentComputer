@@ -1,1 +1,45 @@
-Login
+<div class="container main-container">
+    <h1>Entrar</h1>
+
+    <form novalidate (ngSubmit)="login()" [formGroup]="loginForm">
+
+        <h4>Entre em sua conta</h4>
+        <hr>
+
+        <div class="alert alert-danger" *ngIf="errors.length > 0">
+            <h3 id="returnMessage">Opa! Alguma coisa não deu certo:</h3>
+            <ul>
+                <li *ngFor="let error of errors">{{ error }}</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">E-mail</label>
+            <div class="col-md-10">
+                <input class="form-control" id="email" type="text" placeholder="E-mail (requerido)"
+                    formControlName="email" [ngClass]="{'is-invalid': displayMessages?.['email']}" />
+                <span class="text-danger" *ngIf="displayMessages?.['email'] ">
+                    <p [innerHTML]="displayMessages?.['email'] "></p>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Senha</label>
+            <div class="col-md-10">
+                <input class="form-control" id="password" type="password" placeholder="Senha (requerido)"
+                    formControlName="password" [ngClass]="{'is-invalid': displayMessages?.['password']}" />
+                <span class="text-danger" *ngIf="displayMessages?.['password']">
+                    <p [innerHTML]="displayMessages?.['password']"></p>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-4 col-md-offset-2">
+                <span><button class="btn btn-success" id="Registrar" [disabled]="!loginForm.valid"
+                        type="submit">Entrar</button></span>
+            </div>
+        </div>
+    </form>
+</div>

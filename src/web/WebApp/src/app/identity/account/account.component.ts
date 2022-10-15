@@ -7,8 +7,11 @@ import { CustomValidators } from "ng2-validation";
 import { ToastrService } from "ngx-toastr";
 
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
-import { User } from "../models/user.model";
+
 import { IdentityService } from "../services/identity.service";
+
+import { User } from "src/app/models/user.model";
+import { ApiAuthDataModel } from "src/app/api-models/identity/api-auth-data.model";
 
 @Component({
     selector: 'app-identity-account',
@@ -80,12 +83,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
 
     registerUser() {
         if (this.registerForm.dirty && this.registerForm.valid) {
-            this.user = <User>{
-                email: this.registerForm.value.email,
-                password: this.registerForm.value.password,
-                passwordConfirmation: this.registerForm.value.passwordConfirmation
-            };
 
+            this.user = Object.assign({}, this.user, this.registerForm.value);
             this.identityService.registerUser(this.user)
                 .subscribe({
                     next: (result) => { this.processSuccess(result); },
@@ -94,7 +93,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
         }
     }
 
-    processSuccess(response: any) {
+    processSuccess(response: ApiAuthDataModel) {
         this.registerForm.reset();
         this.errors = [];
 

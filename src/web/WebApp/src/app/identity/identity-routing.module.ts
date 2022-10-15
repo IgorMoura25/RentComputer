@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
 import { AccountGuard } from "./services/account.guard";
+import { LoginGuard } from "./services/login.guard";
 
 import { IdentityComponent } from "./identity.component";
 import { AccountComponent } from "./account/account.component";
@@ -13,7 +14,7 @@ export const routerConfig: Routes = [
         path: '', component: IdentityComponent,
         children: [
             { path: 'register', component: AccountComponent, canActivate: [AccountGuard], canDeactivate: [AccountGuard] },
-            { path: 'login', component: LoginComponent }
+            { path: 'login', component: LoginComponent, canActivate: [LoginGuard] }
         ]
     }
 ];

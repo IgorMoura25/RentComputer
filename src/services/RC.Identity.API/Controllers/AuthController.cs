@@ -87,11 +87,13 @@ namespace RC.Identity.API.Controllers
 
                 var accessToken = await GenerateJwt(model.Email);
                 var refreshToken = await _cryptoHandler.CreateRefreshTokenAsync(model.Email);
+                var jwtRefreshToken = await _cryptoHandler.CreateJwtRefreshTokenAsync(_options.Value.Issuer, await GetJwtClaims(model.Email), DateTime.UtcNow.AddMinutes(480)); // 8 horas
 
                 var response = new
                 {
                     access_token = accessToken,
-                    refreshToken = refreshToken.Token
+                    refreshToken = jwtRefreshToken,
+                    jwtRefreshToken = jwtRefreshToken
                 };
 
                 return CustomResponse(response);
@@ -122,7 +124,7 @@ namespace RC.Identity.API.Controllers
                 var response = new
                 {
                     access_token = accessToken,
-                    refreshToken = refreshToken.Token,
+                    refreshToken = jwtRefreshToken,
                     jwtRefreshToken = jwtRefreshToken
                 };
 
