@@ -10,6 +10,9 @@ const routes: Routes = [
   {
     path: 'account', loadChildren: () => import('./identity/identity.module').then(m => m.IdentityModule)
   },
+  {
+    path: 'product', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
+  },
   { path: '**', component: NotFoundComponent }
 ];
 

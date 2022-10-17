@@ -1,0 +1,84 @@
+<div class="container main-container">
+
+    <h1>Novo Produto</h1>
+
+    <hr>
+    <div class="row">
+        <div class="col-md-10">
+            <form novalidate="novalidate" (ngSubmit)="add()" [formGroup]="productForm">
+
+                <div class="alert alert-danger" *ngIf="errors.length > 0">
+                    <h3 id="returnMessage">Opa! Alguma coisa não deu certo:</h3>
+                    <ul>
+                        <li *ngFor="let error of errors">{{ error }}</li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Nome</label>
+                    <div>
+                        <input class="form-control" type="text" placeholder="Nome (requerido)" formControlName="name"
+                            [ngClass]="{'is-invalid': displayMessages?.['name'] }" />
+                        <span class="text-danger" *ngIf="displayMessages?.['name']">
+                            <p [innerHTML]="displayMessages?.['name']"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Descrição</label>
+                    <div>
+                        <input class="form-control" type="text" placeholder="Descrição" formControlName="description"
+                            [ngClass]="{'is-invalid': displayMessages?.['description'] }" />
+                        <span class="text-danger" *ngIf="displayMessages?.['description']">
+                            <p [innerHTML]="displayMessages?.['description']"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Valor</label>
+                    <div>
+                        <input class="form-control" type="text" formControlName="value"
+                            [ngClass]="{'is-invalid': displayMessages?.['value'] }" />
+                        <span class="text-danger" *ngIf="displayMessages?.['value']">
+                            <p [innerHTML]="displayMessages?.['value']"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Valor de Venda</label>
+                    <div>
+                        <input class="form-control" type="text" formControlName="saleValue"
+                            [ngClass]="{'is-invalid': displayMessages?.['saleValue'] }" />
+                        <span class="text-danger" *ngIf="displayMessages?.['saleValue']">
+                            <p [innerHTML]="displayMessages?.['saleValue']"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="contractType">Contrato</label><br>
+                    <input type="radio" value="1" id="contractType" formControlName="contractType" name="contractType">
+                    Apenas Locação<br>
+                    <input type="radio" value="2" id="contractType" formControlName="contractType" name="contractType">
+                    Locação e Venda
+                </div>
+
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive"
+                            name="isActive" value="true"> Está Ativo?
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Cadastrar" class="btn btn-primary">&nbsp;
+                    <a class="btn btn-info" href="/">Voltar</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
