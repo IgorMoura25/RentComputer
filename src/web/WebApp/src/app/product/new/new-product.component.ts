@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChildren } from "@angular/core";
-import { FormBuilder, FormControlName, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormControlName, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { fromEvent, merge, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
+import { MASKS, NgBrazilValidators } from 'ng-brazil';
 
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
 
@@ -17,12 +18,15 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
     productForm: FormGroup;
     errors: any[] = [];
+    hasUnsavedChanges: boolean;
+    valueLabel = "Valor";
 
     @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
     displayMessages: DisplayMessage = {};
     validationMessages: ValidationMessages;
     genericFormValidator: GenericFormValidator;
+    MASKS = MASKS;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -32,6 +36,9 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         this.validationMessages = {
             name: {
                 required: 'Preencha o Nome do produto'
+            },
+            value: {
+                required: 'Prencha um valor'
             },
             contractType: {
                 required: 'Escolha um tipo de Contrato'
@@ -48,6 +55,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         this.productForm = this.formBuilder.group({
             name: ['', [Validators.required]],
             description: [''],
+            value: ['', [Validators.required]],
             contractType: ['', [Validators.required]],
             isActive: ['', [Validators.required]]
         });
@@ -56,12 +64,49 @@ export class NewProductComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        this.getContractTypeFormControl().valueChanges.subscribe(() => {
+            this.changeValueField();
+            this.configureControlValidations();
+        });
+
+        this.configureControlValidations();
+    }
+
+    changeValueField() {
+        let valueControl = this.getValueFormControl();
+
+        if (this.getContractTypeFormControl().value === "1") {
+            this.valueLabel = "Valor";
+            valueControl.clearValidators();
+            valueControl.setValidators([Validators.required]);
+        }
+        else {
+            this.valueLabel = "Valor Venda";
+            valueControl.clearValidators();
+            valueControl.setValidators([Validators.required]);
+        }
+    }
+
+    getContractTypeFormControl(): AbstractControl {
+        return this.productForm.get('contractType');
+    }
+
+    getValueFormControl(): AbstractControl {
+        return this.productForm.get('value');
+    }
+
+    configureControlValidations() {
         let controlBlurs: Observable<any>[] = this.formInputElements
             .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
 
         merge(...controlBlurs).subscribe(() => {
-            this.displayMessages = this.genericFormValidator.processMessages(this.productForm);
+            this.validateForm();
         });
+    }
+
+    validateForm() {
+        this.displayMessages = this.genericFormValidator.processMessages(this.productForm);
+        this.hasUnsavedChanges = true;
     }
 
     add() {
@@ -76,6 +121,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
     processSuccess(response: ApiAuthDataModel) {
         // this.loginForm.reset();
         // this.errors = [];
+        this.hasUnsavedChanges = false;
 
         // this.identityService.LocalStorage.setUserToken(response.access_token);
 
