@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   staging: false,
   development: true,
-  authorizationServerUrl: "https://localhost:7241/"
+  authorizationServerUrl: "https://localhost:7241/",
+  catalogServerUrl: "https://localhost:6003/"
 };
 
 /*

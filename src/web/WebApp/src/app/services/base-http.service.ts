@@ -8,12 +8,22 @@ export abstract class BaseHttpService {
 
     public LocalStorage = new LocalStorageUtils();
 
-    protected UrlServiceV1: string = environment.authorizationServerUrl;
+    protected AuthUrlServiceV1: string = environment.authorizationServerUrl;
+    protected CatalogUrlServiceV1: string = environment.catalogServerUrl;
 
     protected getJsonHeader() {
         return {
             headers: new HttpHeaders({
                 "Content-Type": "application/json"
+            })
+        };
+    }
+
+    protected getAuthorizationHeaderJson() {
+        return {
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.LocalStorage.getUserToken()}`
             })
         };
     }

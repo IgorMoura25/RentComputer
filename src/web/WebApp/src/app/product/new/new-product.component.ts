@@ -9,6 +9,8 @@ import { MASKS, NgBrazilValidators } from 'ng-brazil';
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
 
 import { ApiAuthDataModel } from "src/app/api-models/identity/api-auth-data.model";
+import { CatalogService } from "../services/catalog.service";
+import { Product } from "../models/product.model";
 
 @Component({
     selector: 'app-product-new',
@@ -17,6 +19,7 @@ import { ApiAuthDataModel } from "src/app/api-models/identity/api-auth-data.mode
 export class NewProductComponent implements OnInit, AfterViewInit {
 
     productForm: FormGroup;
+    product: Product;
     errors: any[] = [];
     hasUnsavedChanges: boolean;
     valueLabel = "Valor";
@@ -30,6 +33,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
     constructor(
         private formBuilder: FormBuilder,
+        private catalogService: CatalogService,
         private router: Router,
         private toastr: ToastrService) {
 
@@ -37,8 +41,11 @@ export class NewProductComponent implements OnInit, AfterViewInit {
             name: {
                 required: 'Preencha o Nome do produto'
             },
+            quantity: {
+                required: 'Preencha uma quantidade'
+            },
             value: {
-                required: 'Prencha um valor'
+                required: 'Preencha um valor'
             },
             contractType: {
                 required: 'Escolha um tipo de Contrato'
@@ -55,6 +62,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         this.productForm = this.formBuilder.group({
             name: ['', [Validators.required]],
             description: [''],
+            quantity: ['', [Validators.required]],
             value: ['', [Validators.required]],
             contractType: ['', [Validators.required]],
             isActive: ['', [Validators.required]]
@@ -114,23 +122,29 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
             console.log(this.productForm.value);
 
-            // adicionar no backend...
+            this.product = Object.assign({}, this.product, this.productForm.value);
+            this.catalogService.addProduct(this.product)
+                .subscribe({
+                    next: (result) => { this.processSuccess(); },
+                    error: (fail) => { this.processError(fail); }
+                });
         }
     }
 
-    processSuccess(response: ApiAuthDataModel) {
-        // this.loginForm.reset();
-        // this.errors = [];
+    processSuccess() {
+        this.productForm.reset();
+        this.errors = [];
         this.hasUnsavedChanges = false;
 
-        // this.identityService.LocalStorage.setUserToken(response.access_token);
-
-        // this.toastr.success("Login realizado com sucesso!", "Bem vindo!");
-        // this.router.navigate(['/catalog']);
+        this.toastr.success("Produto cadastrado com sucesso!", "Cadastro");
+        this.router.navigate(['/catalog']);
     }
 
     processError(fail: any) {
-        this.errors = fail.error.errors;
+        if (fail.error?.errors) {
+            this.errors = fail.error?.errors;
+        }
+
         this.toastr.error("Ocorreu um erro!", "Opa :(");
     }
 }

@@ -37,6 +37,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="control-label">Quantidade</label>
+                    <div>
+                        <input class="form-control" type="text" formControlName="quantity"
+                            [ngClass]="{'is-invalid': displayMessages?.['quantity'] }" number
+                            [textMask]="{mask: MASKS?.['number'].textMask}" />
+                        <span class=" text-danger" *ngIf="displayMessages?.['quantity']">
+                            <p [innerHTML]="displayMessages?.['quantity']"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="control-label">{{valueLabel}}</label>
                     <div>
                         <input class="form-control" type="text" formControlName="value"

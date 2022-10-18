@@ -105,7 +105,10 @@ export class AccountComponent implements OnInit, AfterViewInit {
     }
 
     processError(fail: any) {
-        this.errors = fail.error.errors;
+        if (fail.error?.errors) {
+            this.errors = fail.error?.errors;
+        }
+
         this.toastr.error("Ocorreu um erro!", "Opa :(");
     }
 }

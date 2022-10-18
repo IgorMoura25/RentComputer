@@ -22,7 +22,7 @@ export class IdentityService extends BaseHttpService {
         };
 
         return this.httpClient
-            .post(this.UrlServiceV1 + 'auth/user', createUserApiModel)
+            .post(this.AuthUrlServiceV1 + 'auth/user', createUserApiModel)
             .pipe(
                 map(this.getResponseData),
                 catchError(this.handleError));
@@ -35,7 +35,7 @@ export class IdentityService extends BaseHttpService {
         };
 
         return this.httpClient
-            .post(this.UrlServiceV1 + 'auth/login', loginUserApiModel)
+            .post(this.AuthUrlServiceV1 + 'auth/login', loginUserApiModel)
             .pipe(
                 map(this.getResponseData),
                 catchError(this.handleError));
