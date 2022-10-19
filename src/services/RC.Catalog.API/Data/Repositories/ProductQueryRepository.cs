@@ -27,6 +27,11 @@ namespace RC.Catalog.API.Data.Repositories
             return await _productsCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
         }
 
+        public async Task<ProductDTO?> GetByGuidAsync(Guid guid)
+        {
+            return await _productsCollection.Find(x => x.ProductGuid == guid.ToString()).FirstOrDefaultAsync();
+        }
+
         public async Task CreateAsync(ProductDTO product)
         {
             await _productsCollection.InsertOneAsync(product);

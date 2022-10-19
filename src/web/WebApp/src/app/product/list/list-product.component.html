@@ -1,0 +1,35 @@
+<div class="container main-container">
+
+    <h1>Lista de Produtos</h1>
+
+    <p>
+        <a class="btn btn-info" [routerLink]="['/product/new']">Novo Produto</a>
+    </p>
+
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Ativo?</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tr *ngFor="let product of products">
+            <td>
+                {{ product.name }}
+            </td>
+            <td>
+                {{product.description }}
+            </td>
+            <td>
+                <input [checked]="product.isActive" class="check-box" disabled="disabled" type="checkbox">
+            </td>
+            <td class="text-right">
+                <a class="btn btn-warning" [routerLink]="['/product/edit', product.productGuid]">
+                    <span class="fa fa-pencil-alt"></span>
+                </a>&nbsp;
+            </td>
+        </tr>
+    </table>
+</div>

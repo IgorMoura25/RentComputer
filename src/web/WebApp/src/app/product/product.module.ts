@@ -10,11 +10,14 @@ import { CatalogService } from "./services/catalog.service";
 
 import { ProductComponent } from "./product.component";
 import { NewProductComponent } from "./new/new-product.component";
+import { ListProductComponent } from "./list/list-product.component";
 
 import { CustomFormsModule } from "ng2-validation";
 import { NgBrazil } from "ng-brazil";
 import { TextMaskModule } from "angular2-text-mask";
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
+import { EditProductComponent } from "./edit/edit-product.component";
+import { ProductResolve } from "./services/product.resolve";
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -31,7 +34,9 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     declarations: [
         ProductComponent,
         // children
-        NewProductComponent
+        NewProductComponent,
+        ListProductComponent,
+        EditProductComponent
     ],
     imports: [
         CommonModule,
@@ -47,6 +52,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     ],
     providers: [
         CatalogService,
+        ProductResolve,
         { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
     ],
     exports: [

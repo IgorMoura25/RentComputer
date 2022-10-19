@@ -16,5 +16,10 @@ namespace RC.Catalog.API.Application.Queries
         {
             return await _productRepository.GetAllAsync();
         }
+
+        public async Task<ProductDTO?> GetByGuidAsync(Guid guid)
+        {
+            return await _productRepository.GetByGuidAsync(guid);
+        }
     }
 }

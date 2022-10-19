@@ -4,8 +4,8 @@
     {
         public string Title { get; }
         public int Status { get; }
-        public object Data { get; set; }
-        public IEnumerable<string> Errors { get; }
+        public object? Data { get; set; }
+        public IEnumerable<string>? Errors { get; }
 
         public ApiResponse(string title, int status)
         {
@@ -13,7 +13,7 @@
             Status = status;
         }
 
-        public ApiResponse(string title, int status, object data)
+        public ApiResponse(string title, int status, object? data)
         {
             Title = title;
             Status = status;

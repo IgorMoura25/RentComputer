@@ -45,5 +45,12 @@ namespace RC.Catalog.API.Controllers
 
             return CustomResponse(result, HttpStatusCode.Created);
         }
+
+        [HttpGet]
+        [Route("product/{guid}")]
+        public async Task<IActionResult> GetProductByGuidAsync([FromRoute] Guid guid)
+        {
+            return CustomResponse(await _productQueries.GetByGuidAsync(guid));
+        }
     }
 }

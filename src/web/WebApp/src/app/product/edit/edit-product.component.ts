@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChildren } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControlName, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { fromEvent, merge, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
@@ -12,10 +12,10 @@ import { CatalogService } from "../services/catalog.service";
 import { Product } from "../models/product.model";
 
 @Component({
-    selector: 'app-product-new',
-    templateUrl: './new-product.component.html'
+    selector: 'app-product-edit',
+    templateUrl: './edit-product.component.html'
 })
-export class NewProductComponent implements OnInit, AfterViewInit {
+export class EditProductComponent implements OnInit, AfterViewInit {
 
     productForm: FormGroup;
     product: Product;
@@ -34,6 +34,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private catalogService: CatalogService,
         private router: Router,
+        private route: ActivatedRoute,
         private toastr: ToastrService) {
 
         this.validationMessages = {
@@ -55,6 +56,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         };
 
         this.genericFormValidator = new GenericFormValidator(this.validationMessages);
+        this.product = this.route.snapshot.data["product"];
     }
 
     ngOnInit(): void {
@@ -67,7 +69,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
             isActive: ['', [Validators.required]]
         });
 
-        this.productForm.patchValue({ contractType: '1', isActive: true });
+        this.fillForm();
     }
 
     ngAfterViewInit(): void {
@@ -77,6 +79,17 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         });
 
         this.configureControlValidations();
+    }
+
+    fillForm() {
+        this.productForm.patchValue({
+            name: this.product.name,
+            description: this.product.description,
+            quantity: this.product.quantity,
+            value: this.product.value,
+            contractType: "1",
+            isActive: this.product.isActive
+        });
     }
 
     changeValueField() {
@@ -116,17 +129,20 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         this.hasUnsavedChanges = true;
     }
 
-    add() {
-        if (this.productForm.dirty && this.productForm.valid) {
+    edit() {
+        if (!this.productForm.valid) {
+            return;
+        }
 
+        if (this.productForm.dirty) {
             console.log(this.productForm.value);
 
             this.product = Object.assign({}, this.product, this.productForm.value);
-            this.catalogService.addProduct(this.product)
-                .subscribe({
-                    next: (result) => { this.processSuccess(); },
-                    error: (fail) => { this.processError(fail); }
-                });
+
+            // Editar no backend...
+        }
+        else {
+            this.toastr.info("Não há alterações para salvar", "Editar");
         }
     }
 
@@ -135,7 +151,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         this.errors = [];
         this.hasUnsavedChanges = false;
 
-        this.toastr.success("Produto cadastrado com sucesso!", "Cadastro");
+        this.toastr.success("Produto editado com sucesso!", "Editar");
         this.router.navigate(['/product']);
     }
 

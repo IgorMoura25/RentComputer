@@ -10,7 +10,7 @@ namespace RC.WebAPI.Core
     {
         protected ICollection<string> Errors = new List<string>();
 
-        protected ActionResult CustomResponse(object result = null, HttpStatusCode? successResponseStatusCode = null)
+        protected ActionResult CustomResponse(object? result = null, HttpStatusCode? successResponseStatusCode = null)
         {
             if (IsValid())
             {

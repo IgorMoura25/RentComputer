@@ -28,4 +28,20 @@ export class CatalogService extends BaseHttpService {
                 map(this.getResponseData),
                 catchError(this.handleError));
     }
+
+    listProducts(): Observable<Product[]> {
+        return this.httpClient
+            .get(this.CatalogUrlServiceV1 + 'catalog/products', this.getAuthorizationHeaderJson())
+            .pipe(
+                map(this.getResponseData),
+                catchError(this.handleError));
+    }
+
+    getProductByGuid(guid: string): Observable<Product> {
+        return this.httpClient
+            .get(this.CatalogUrlServiceV1 + 'catalog/product/' + guid, this.getAuthorizationHeaderJson())
+            .pipe(
+                map(this.getResponseData),
+                catchError(this.handleError));
+    }
 }

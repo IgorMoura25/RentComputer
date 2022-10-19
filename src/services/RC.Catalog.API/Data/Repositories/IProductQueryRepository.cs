@@ -8,6 +8,7 @@ namespace RC.Catalog.API.Data.Repositories
     {
         public Task<IEnumerable<ProductDTO>> GetAllAsync();
         public Task<ProductDTO?> GetByNameAsync(string name);
+        public Task<ProductDTO?> GetByGuidAsync(Guid guid);
         public Task CreateAsync(ProductDTO product);
     }
 }
