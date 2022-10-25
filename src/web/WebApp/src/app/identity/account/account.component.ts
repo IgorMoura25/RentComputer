@@ -12,6 +12,7 @@ import { IdentityService } from "../services/identity.service";
 
 import { User } from "src/app/models/user.model";
 import { ApiAuthDataModel } from "src/app/api-models/identity/api-auth-data.model";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
     selector: 'app-identity-account',
@@ -34,7 +35,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private identityService: IdentityService,
         private router: Router,
-        private toastr: ToastrService) {
+        private toastr: ToastrService,
+        private spinner: NgxSpinnerService) {
 
         this.validationMessages = {
             email: {
@@ -58,6 +60,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.spinner.show();
+
         let passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{4,}$";
 
         let password = new FormControl('', [Validators.required, Validators.pattern(passwordPattern), CustomValidators.rangeLength([8, 20])]);
@@ -79,10 +83,12 @@ export class AccountComponent implements OnInit, AfterViewInit {
         });
 
         this.hasUnsavedChanges = true;
+        this.spinner.hide();
     }
 
     registerUser() {
         if (this.registerForm.dirty && this.registerForm.valid) {
+            this.spinner.show();
 
             this.user = Object.assign({}, this.user, this.registerForm.value);
             this.identityService.registerUser(this.user)
@@ -100,6 +106,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
         this.identityService.LocalStorage.setUserToken(response.access_token);
 
         this.hasUnsavedChanges = false;
+        this.spinner.hide();
+
         this.toastr.success("Registro realizado com sucesso!", "Bem vindo!");
         this.router.navigate(['/catalog']);
     }
@@ -110,5 +118,6 @@ export class AccountComponent implements OnInit, AfterViewInit {
         }
 
         this.toastr.error("Ocorreu um erro!", "Opa :(");
+        this.spinner.hide();
     }
 }

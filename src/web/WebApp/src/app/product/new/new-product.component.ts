@@ -3,13 +3,15 @@ import { AbstractControl, FormBuilder, FormControlName, FormGroup, Validators } 
 import { Router } from "@angular/router";
 import { fromEvent, merge, Observable } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
-import { MASKS } from 'ng-brazil';
-
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
 
 import { CatalogService } from "../services/catalog.service";
+
 import { Product } from "../models/product.model";
+
+import { ToastrService } from "ngx-toastr";
+import { MASKS } from 'ng-brazil';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
     selector: 'app-product-new',
@@ -34,7 +36,8 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private catalogService: CatalogService,
         private router: Router,
-        private toastr: ToastrService) {
+        private toastr: ToastrService,
+        private spinner: NgxSpinnerService) {
 
         this.validationMessages = {
             name: {
@@ -58,6 +61,8 @@ export class NewProductComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.spinner.show();
+
         this.productForm = this.formBuilder.group({
             name: ['', [Validators.required]],
             description: [''],
@@ -77,6 +82,8 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         });
 
         this.configureControlValidations();
+
+        this.spinner.hide();
     }
 
     changeValueField() {
@@ -118,6 +125,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
     add() {
         if (this.productForm.dirty && this.productForm.valid) {
+            this.spinner.show();
 
             console.log(this.productForm.value);
 
@@ -134,6 +142,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         this.productForm.reset();
         this.errors = [];
         this.hasUnsavedChanges = false;
+        this.spinner.hide();
 
         this.toastr.success("Produto cadastrado com sucesso!", "Cadastro");
         this.router.navigate(['/product']);
@@ -145,5 +154,6 @@ export class NewProductComponent implements OnInit, AfterViewInit {
         }
 
         this.toastr.error("Ocorreu um erro!", "Opa :(");
+        this.spinner.hide();
     }
 }

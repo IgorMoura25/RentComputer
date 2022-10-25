@@ -1,6 +1,14 @@
 <div class="container main-container">
 
     <h1>Lista de Produtos</h1>
+    <hr>
+
+    <div class="alert alert-danger" *ngIf="errors.length > 0">
+        <h3 id="returnMessage">Opa! Alguma coisa não deu certo:</h3>
+        <ul>
+            <li *ngFor="let error of errors">{{ error }}</li>
+        </ul>
+    </div>
 
     <p>
         <a class="btn btn-info" [routerLink]="['/product/new']">Novo Produto</a>
@@ -26,6 +34,9 @@
                 <input [checked]="product.isActive" class="check-box" disabled="disabled" type="checkbox">
             </td>
             <td class="text-right">
+                <a class="btn btn-info" [routerLink]="['/product/detail', product.productGuid]">
+                    <span class="fa fa-search"></span>
+                </a>&nbsp;
                 <a class="btn btn-warning" [routerLink]="['/product/edit', product.productGuid]">
                     <span class="fa fa-pencil-alt"></span>
                 </a>&nbsp;

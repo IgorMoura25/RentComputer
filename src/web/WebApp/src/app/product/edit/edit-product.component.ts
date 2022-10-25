@@ -3,13 +3,14 @@ import { AbstractControl, FormBuilder, FormControlName, FormGroup, Validators } 
 import { ActivatedRoute, Router } from "@angular/router";
 import { fromEvent, merge, Observable } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
-import { MASKS } from 'ng-brazil';
-
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
 
 import { CatalogService } from "../services/catalog.service";
 import { Product } from "../models/product.model";
+
+import { ToastrService } from "ngx-toastr";
+import { MASKS } from 'ng-brazil';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
     selector: 'app-product-edit',
@@ -35,7 +36,8 @@ export class EditProductComponent implements OnInit, AfterViewInit {
         private catalogService: CatalogService,
         private router: Router,
         private route: ActivatedRoute,
-        private toastr: ToastrService) {
+        private toastr: ToastrService,
+        private spinner: NgxSpinnerService) {
 
         this.validationMessages = {
             name: {
@@ -60,6 +62,8 @@ export class EditProductComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.spinner.show();
+
         this.productForm = this.formBuilder.group({
             name: ['', [Validators.required]],
             description: [''],
@@ -79,6 +83,8 @@ export class EditProductComponent implements OnInit, AfterViewInit {
         });
 
         this.configureControlValidations();
+        
+        this.spinner.hide();
     }
 
     fillForm() {
@@ -130,7 +136,10 @@ export class EditProductComponent implements OnInit, AfterViewInit {
     }
 
     edit() {
+        this.spinner.show();
+
         if (!this.productForm.valid) {
+            this.spinner.hide();
             return;
         }
 
@@ -143,6 +152,7 @@ export class EditProductComponent implements OnInit, AfterViewInit {
         }
         else {
             this.toastr.info("Não há alterações para salvar", "Editar");
+            this.spinner.hide();
         }
     }
 
@@ -153,6 +163,8 @@ export class EditProductComponent implements OnInit, AfterViewInit {
 
         this.toastr.success("Produto editado com sucesso!", "Editar");
         this.router.navigate(['/product']);
+
+        this.spinner.hide();
     }
 
     processError(fail: any) {
@@ -161,5 +173,7 @@ export class EditProductComponent implements OnInit, AfterViewInit {
         }
 
         this.toastr.error("Ocorreu um erro!", "Opa :(");
+
+        this.spinner.hide();
     }
 }

@@ -8,6 +8,7 @@ import { ProductComponent } from "./product.component";
 import { ListProductComponent } from "./list/list-product.component";
 import { NewProductComponent } from "./new/new-product.component";
 import { EditProductComponent } from "./edit/edit-product.component";
+import { DetailProductComponent } from "./detail/detail-product.component";
 
 export const routerConfig: Routes = [
     {
@@ -17,6 +18,10 @@ export const routerConfig: Routes = [
             { path: 'new', component: NewProductComponent },
             {
                 path: 'edit/:guid', component: EditProductComponent,
+                resolve: { product: ProductResolve }
+            },
+            {
+                path: 'detail/:guid', component: DetailProductComponent,
                 resolve: { product: ProductResolve }
             }
         ]

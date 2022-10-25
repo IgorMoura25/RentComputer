@@ -24,6 +24,7 @@
     "ng-brazil": "^2.4.5",
     "ng2-currency-mask": "^13.0.3",
     "ng2-validation": "^4.2.0",
+    "ngx-spinner": "^14.0.0",
     "ngx-toastr": "^15.2.0",
     "rxjs": "~7.5.0",
     "text-mask-addons": "^3.8.0",

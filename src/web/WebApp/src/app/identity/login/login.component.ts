@@ -3,15 +3,16 @@ import { FormBuilder, FormControlName, FormGroup, Validators } from "@angular/fo
 import { Router } from "@angular/router";
 import { fromEvent, merge, Observable } from "rxjs";
 
-import { CustomValidators } from "ng2-validation";
-import { ToastrService } from "ngx-toastr";
-
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
 
 import { IdentityService } from "../services/identity.service";
 
 import { ApiAuthDataModel } from "src/app/api-models/identity/api-auth-data.model";
 import { User } from "src/app/models/user.model";
+
+import { CustomValidators } from "ng2-validation";
+import { ToastrService } from "ngx-toastr";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
     selector: 'app-identity-login',
@@ -33,7 +34,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private identityService: IdentityService,
         private router: Router,
-        private toastr: ToastrService) {
+        private toastr: ToastrService,
+        private spinner: NgxSpinnerService) {
 
         this.validationMessages = {
             email: {
@@ -51,6 +53,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.spinner.show();
+
         let passwordPattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{4,}$";
 
         this.loginForm = this.formBuilder.group({
@@ -66,10 +70,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
         merge(...controlBlurs).subscribe(() => {
             this.displayMessages = this.genericFormValidator.processMessages(this.loginForm);
         });
+
+        this.spinner.hide();
     }
 
     login() {
         if (this.loginForm.dirty && this.loginForm.valid) {
+            this.spinner.show();
 
             this.user = Object.assign({}, this.user, this.loginForm.value);
             this.identityService.login(this.user)
@@ -85,6 +92,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.errors = [];
 
         this.identityService.LocalStorage.setUserToken(response.access_token);
+        this.spinner.hide();
 
         this.toastr.success("Login realizado com sucesso!", "Bem vindo!");
         this.router.navigate(['/catalog']);
@@ -94,7 +102,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
         if (fail.error?.errors) {
             this.errors = fail.error?.errors;
         }
-        
+
         this.toastr.error("Ocorreu um erro!", "Opa :(");
+        this.spinner.hide();
     }
 }

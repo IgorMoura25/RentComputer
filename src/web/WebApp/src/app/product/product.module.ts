@@ -6,19 +6,19 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { ProductRoutingModule } from "./product-routing.module";
 
+import { ProductResolve } from "./services/product.resolve";
 import { CatalogService } from "./services/catalog.service";
 
 import { ProductComponent } from "./product.component";
 import { NewProductComponent } from "./new/new-product.component";
 import { ListProductComponent } from "./list/list-product.component";
+import { EditProductComponent } from "./edit/edit-product.component";
+import { DetailProductComponent } from "./detail/detail-product.component";
 
 import { CustomFormsModule } from "ng2-validation";
 import { NgBrazil } from "ng-brazil";
 import { TextMaskModule } from "angular2-text-mask";
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
-import { EditProductComponent } from "./edit/edit-product.component";
-import { ProductResolve } from "./services/product.resolve";
-
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     align: "left",
@@ -36,7 +36,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         // children
         NewProductComponent,
         ListProductComponent,
-        EditProductComponent
+        EditProductComponent,
+        DetailProductComponent
     ],
     imports: [
         CommonModule,
