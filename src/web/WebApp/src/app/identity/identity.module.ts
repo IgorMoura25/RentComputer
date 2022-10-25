@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { HttpClientModule } from "@angular/common/http";
 
 import { IdentityRoutingModule } from "./identity-routing.module";
 
@@ -28,7 +27,6 @@ import { CustomFormsModule } from "ng2-validation";
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientModule,
         CustomFormsModule,
 
         IdentityRoutingModule

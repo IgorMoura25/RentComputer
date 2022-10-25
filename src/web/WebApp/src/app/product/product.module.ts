@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
 
 import { ProductRoutingModule } from "./product-routing.module";
 
@@ -44,7 +43,6 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientModule,
         CustomFormsModule,
         TextMaskModule,
         CurrencyMaskModule,

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChildren } from "@angular/core";
 import { FormBuilder, FormControlName, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { fromEvent, merge, Observable } from "rxjs";
 
 import { DisplayMessage, GenericFormValidator, ValidationMessages } from "src/app/utils/generic-form-validator";
@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     user: User;
     loginForm: FormGroup;
     errors: any[] = [];
+    returnUrl: string;
 
     @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     genericFormValidator: GenericFormValidator;
 
     constructor(
+        private activatedRoute: ActivatedRoute,
         private formBuilder: FormBuilder,
         private identityService: IdentityService,
         private router: Router,
@@ -61,6 +63,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.pattern(passwordPattern), CustomValidators.rangeLength([8, 20])]]
         });
+
+        this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl');
     }
 
     ngAfterViewInit(): void {
@@ -95,7 +99,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
 
         this.toastr.success("Login realizado com sucesso!", "Bem vindo!");
-        this.router.navigate(['/catalog']);
+
+        if (this.returnUrl) {
+            this.router.navigate([this.returnUrl]);
+        }
+        else {
+            this.router.navigate(['/catalog']);
+        }
     }
 
     processError(fail: any) {
