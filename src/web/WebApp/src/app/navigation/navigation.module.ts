@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
+import { AccessDeniedComponent } from "./access-denied/access-denied.component";
 import { CatalogComponent } from "./catalog/catalog.component";
 import { FooterComponent } from "./footer/footer.component";
 import { HeaderLoginComponent } from "./header-login/header-login.component";
@@ -16,7 +17,8 @@ import { NotFoundComponent } from "./not-found/not-found.component";
         FooterComponent,
         HeaderComponent,
         NotFoundComponent,
-        HeaderLoginComponent
+        HeaderLoginComponent,
+        AccessDeniedComponent
     ],
     imports: [
         CommonModule,

@@ -1,7 +1,15 @@
 export class LocalStorageUtils {
 
     public getUser() {
-        return JSON.parse(localStorage.getItem('rent-computer.user'));
+        // Simulando um usuário com permissões
+        return {
+            claims: [
+                {
+                    type: "Product",
+                    value: "Read"
+                }
+            ]
+        }
     }
 
     public removeUserToken() {

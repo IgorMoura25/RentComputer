@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { NavigationModule } from './navigation/navigation.module';
 
 import { ErrorInterceptor } from './services/error.handler.service';
+import { ProductGuard } from './product/services/product.guard';
 
 export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
@@ -31,7 +32,8 @@ export const httpInterceptorProviders = [
     NavigationModule
   ],
   providers: [
-    httpInterceptorProviders
+    httpInterceptorProviders,
+    ProductGuard
   ],
   bootstrap: [AppComponent]
 })
