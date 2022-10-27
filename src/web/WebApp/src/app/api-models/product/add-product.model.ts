@@ -3,4 +3,6 @@ export interface AddProductApiModel {
     description: string;
     value: number;
     quantity: number;
+    imageName: string;
+    imageBase64: string;
 }

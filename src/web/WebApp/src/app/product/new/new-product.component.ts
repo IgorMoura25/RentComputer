@@ -12,6 +12,7 @@ import { Product } from "../models/product.model";
 import { ToastrService } from "ngx-toastr";
 import { MASKS } from 'ng-brazil';
 import { NgxSpinnerService } from "ngx-spinner";
+import { Dimensions, ImageCroppedEvent, ImageTransform, LoadedImage } from "ngx-image-cropper";
 
 @Component({
     selector: 'app-product-new',
@@ -24,6 +25,17 @@ export class NewProductComponent implements OnInit, AfterViewInit {
     errors: any[] = [];
     hasUnsavedChanges: boolean;
     valueLabel = "Valor";
+
+    imageChangedEvent: any = '';
+    croppedImage: any = '';
+    canvasRotation = 0;
+    rotation = 0;
+    scale = 1;
+    showCropper = false;
+    containWithinAspectRatio = false;
+    transform: ImageTransform = {};
+    imageUrl: string;
+    imageName: string;
 
     @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
@@ -54,6 +66,9 @@ export class NewProductComponent implements OnInit, AfterViewInit {
             },
             isActive: {
                 required: 'Escolha se o produto está ativo'
+            },
+            image: {
+                required: 'Escolha uma imagem para o produto'
             }
         };
 
@@ -69,7 +84,8 @@ export class NewProductComponent implements OnInit, AfterViewInit {
             quantity: ['', [Validators.required]],
             value: ['', [Validators.required]],
             contractType: ['', [Validators.required]],
-            isActive: ['', [Validators.required]]
+            isActive: ['', [Validators.required]],
+            image: ['', [Validators.required]]
         });
 
         this.productForm.patchValue({ contractType: '1', isActive: true });
@@ -130,6 +146,10 @@ export class NewProductComponent implements OnInit, AfterViewInit {
             console.log(this.productForm.value);
 
             this.product = Object.assign({}, this.product, this.productForm.value);
+
+            this.product.imageName = this.imageName;
+            this.product.imageBase64 = this.croppedImage.split(',')[1];
+
             this.catalogService.addProduct(this.product)
                 .subscribe({
                     next: (result) => { this.processSuccess(); },
@@ -155,5 +175,28 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
         this.toastr.error("Ocorreu um erro!", "Opa :(");
         this.spinner.hide();
+    }
+
+    // Image cropper
+
+    fileChangeEvent(event: any): void {
+        this.imageChangedEvent = event;
+        this.imageName = event.currentTarget.files[0].name;
+    }
+
+    imageCropped(event: ImageCroppedEvent) {
+        this.croppedImage = event.base64;
+    }
+
+    imageLoaded(image: LoadedImage) {
+        this.showCropper = true;
+    }
+
+    cropperReady(sourceImageDimensions: Dimensions) {
+        console.log("Cropper ready", sourceImageDimensions);
+    }
+
+    loadImageFailed() {
+        this.errors.push("O formato do arquivo " + this.imageName + " não é aceito");
     }
 }

@@ -19,7 +19,9 @@ export class CatalogService extends BaseHttpService {
             name: product.name,
             description: StringUtils.nullIfEmpty(product.description),
             value: product.value,
-            quantity: product.quantity
+            quantity: product.quantity,
+            imageName: product.imageName,
+            imageBase64: product.imageBase64
         };
 
         return this.httpClient

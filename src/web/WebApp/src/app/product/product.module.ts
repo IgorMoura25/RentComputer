@@ -18,6 +18,7 @@ import { CustomFormsModule } from "ng2-validation";
 import { NgBrazil } from "ng-brazil";
 import { TextMaskModule } from "angular2-text-mask";
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
+import { ImageCropperModule } from "ngx-image-cropper";
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     align: "left",
@@ -46,6 +47,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         CustomFormsModule,
         TextMaskModule,
         CurrencyMaskModule,
+        ImageCropperModule,
 
         ProductRoutingModule
     ],

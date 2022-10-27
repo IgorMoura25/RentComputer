@@ -5,6 +5,8 @@ export interface Product {
     description: string;
     value: number;
     quantity: number;
+    imageName: string;
+    imageBase64: string;
     isActive: boolean;
     createdAt: Date
 }

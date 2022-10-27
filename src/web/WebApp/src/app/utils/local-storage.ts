@@ -6,7 +6,7 @@ export class LocalStorageUtils {
             claims: [
                 {
                     type: "Product",
-                    value: "Read"
+                    value: "Read, Write"
                 }
             ]
         }
