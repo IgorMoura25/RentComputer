@@ -12,6 +12,8 @@ namespace RC.Catalog.API.Data.Mapping
 
             builder.Property(i => i.Id).HasColumnName("ProductImageId").UseIdentityColumn();
             builder.Property(i => i.UniversalId).HasColumnName("ProductImageGuid");
+            builder.Property(i => i.ProductId).HasColumnName("ProductId");
+            builder.Property(i => i.ProductUniversalId).HasColumnName("ProductUniversalId");
             builder.Property(p => p.Path).HasColumnType("varchar(500)").IsRequired();
 
             builder.ToTable("ProductImages");

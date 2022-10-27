@@ -41,7 +41,7 @@ namespace RC.Catalog.API.Controllers
         [Route("product")]
         public async Task<IActionResult> AddProductAsync([FromBody] AddProductViewRequestModel model)
         {
-            var result = await _bus.SendCommandAsync(new AddProductCommand(0, model.Name, model.Description, model.Value, model.Quantity));
+            var result = await _bus.SendCommandAsync(new AddProductCommand(0, model.Name, model.Description, model.Value, model.Quantity, model.ImageName, model.ImageBase64));
 
             return CustomResponse(result, HttpStatusCode.Created);
         }

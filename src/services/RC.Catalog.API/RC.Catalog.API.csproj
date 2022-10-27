@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Files\d20743a8-6008-4231-a514-03551349794d-pc.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EasyNetQ" Version="6.3.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
@@ -38,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Files\" />
   </ItemGroup>
 
   <ItemGroup>

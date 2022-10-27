@@ -19,9 +19,10 @@ namespace RC.Catalog.API.Data.Mapping
             builder.Property(p => p.IsActive).HasColumnType("bit").IsRequired();
             builder.Property(p => p.CreatedAt).HasColumnType("datetime").IsRequired();
 
-            builder.HasMany(p => p.Images)
-            .WithOne(p => p.Product)
-            .OnDelete(DeleteBehavior.Cascade);
+            builder
+                .HasMany(p => p.Images)
+                .WithOne(p => p.Product)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.ToTable("Products");
         }

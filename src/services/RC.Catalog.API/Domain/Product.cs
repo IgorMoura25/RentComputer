@@ -16,11 +16,11 @@ namespace RC.Catalog.API.Domain
         {
         }
 
-        public Product(string name, string description, decimal value, int quantity)
+        public Product(string? name, string? description, decimal value, int quantity)
         {
             UniversalId = Guid.NewGuid();
-            Name = name;
-            Description = description;
+            Name = name ?? string.Empty;
+            Description = description ?? string.Empty;
             Value = value;
             Quantity = quantity;
             IsActive = true;

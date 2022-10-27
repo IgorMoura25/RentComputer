@@ -4,7 +4,9 @@ using RC.Catalog.API.Data.Repositories;
 
 namespace RC.Catalog.API.Application.Events
 {
-    public class ProductEventHandler : INotificationHandler<ProductAddedEvent>
+    public class ProductEventHandler :
+        INotificationHandler<ProductAddedEvent>,
+        INotificationHandler<ProductImageAddedEvent>
     {
         private readonly IProductQueryRepository _productQueryRepository;
 
@@ -25,6 +27,17 @@ namespace RC.Catalog.API.Application.Events
                 Quantity = notification.Quantity,
                 IsActive = notification.IsActive,
                 CreatedAt = notification.CreatedAt
+            });
+        }
+
+        public async Task Handle(ProductImageAddedEvent notification, CancellationToken cancellationToken)
+        {
+            await _productQueryRepository.CreateImageAsync(new ProductImageDTO()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProductImageGuid = notification.ProductImageGuid.ToString(),
+                ProductUniversalId = notification.ProductUniversalId.ToString(),
+                Path = notification.Path
             });
         }
     }

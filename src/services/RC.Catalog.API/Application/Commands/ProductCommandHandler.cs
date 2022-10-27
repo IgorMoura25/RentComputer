@@ -48,7 +48,49 @@ namespace RC.Catalog.API.Application.Commands
                 return ValidationResult;
             }
 
+            var addedProduct = await _productRepository.GetByGuidAsync(product.UniversalId);
+
+            var path = UploadFile(request.ImageBase64, request.ImageName);
+
+            if (path == null)
+            {
+                return ValidationResult;
+            }
+
+            var image = new ProductImage(addedProduct.Id, addedProduct.UniversalId, path);
+
+            _productRepository.AddImage(image);
+
+            _eventList.AddEvent(new ProductImageAddedEvent(image.Id, image.UniversalId, addedProduct.UniversalId, path));
+
+            var successImage = await _productRepository.UnitOfWork.CommitAsync();
+
+            if (!successImage)
+            {
+                AddError("An error ocurred while adding the product image");
+
+                // TODO: Should delete the product if the image did not work
+
+                return ValidationResult;
+            }
+
             return ValidationResult;
+        }
+
+        private string? UploadFile(string base64, string imageName)
+        {
+            var bytes = Convert.FromBase64String(base64);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "files", ($"{Guid.NewGuid()}-{imageName}"));
+
+            if (File.Exists(path))
+            {
+                AddError("File already exists");
+                return null;
+            }
+
+            File.WriteAllBytes(path, bytes);
+
+            return path;
         }
     }
 }

@@ -10,8 +10,10 @@ namespace RC.Catalog.API.Application.Commands
         public string? Description { get; private set; }
         public decimal Value { get; private set; }
         public int Quantity { get; private set; }
+        public string? ImageName { get; private set; }
+        public string? ImageBase64 { get; private set; }
 
-        public AddProductCommand(long id, string? name, string? description, decimal value, int quantity)
+        public AddProductCommand(long id, string? name, string? description, decimal value, int quantity, string? imageName, string? imageBase64)
         {
             AggregateId = id;
             Id = id;
@@ -19,6 +21,8 @@ namespace RC.Catalog.API.Application.Commands
             Description = description;
             Value = value;
             Quantity = quantity;
+            ImageName = imageName;
+            ImageBase64 = imageBase64;
         }
 
         public override bool IsValid()
@@ -43,11 +47,27 @@ namespace RC.Catalog.API.Application.Commands
             RuleFor(product => product.Quantity)
                .Must(HasValidQuantity)
                .WithMessage("The quantity of the product must be greater than zero");
+
+            RuleFor(product => product.ImageName)
+               .Must(x => !string.IsNullOrWhiteSpace(x))
+               .WithMessage("The name of the product image was not supplied");
+
+            RuleFor(product => product.ImageBase64)
+               .Must(IsBase64String)
+               .WithMessage("The image of the product is not a base64 format");
         }
 
         public bool HasValidQuantity(int quantity)
         {
             return quantity > 0;
+        }
+
+        public bool IsBase64String(string? base64)
+        {
+            if (base64 is null) return false;
+
+            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
+            return Convert.TryFromBase64String(base64, buffer, out int bytesParsed);
         }
     }
 }

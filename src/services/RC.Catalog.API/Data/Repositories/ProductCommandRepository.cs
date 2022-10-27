@@ -22,9 +22,21 @@ namespace RC.Catalog.API.Data.Repositories
             return product;
         }
 
+        public ProductImage AddImage(ProductImage image)
+        {
+            _context.ProductImages.Add(image);
+
+            return image;
+        }
+
         public async Task<Product?> GetByNameAsync(string name)
         {
             return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Name == name);
+        }
+
+        public async Task<Product?> GetByGuidAsync(Guid guid)
+        {
+            return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.UniversalId == guid);
         }
 
         public void Dispose()

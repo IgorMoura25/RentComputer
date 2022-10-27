@@ -8,6 +8,7 @@ namespace RC.Catalog.API.Data.Repositories
     public class ProductQueryRepository : IProductQueryRepository
     {
         private readonly IMongoCollection<ProductDTO> _productsCollection;
+        private readonly IMongoCollection<ProductImageDTO> _productImagesCollection;
 
         public ProductQueryRepository(IOptions<DataBaseSettings> dataBaseSettings)
         {
@@ -15,6 +16,7 @@ namespace RC.Catalog.API.Data.Repositories
             var mongoDatabase = mongoClient.GetDatabase(dataBaseSettings.Value.ReadDatabaseName);
 
             _productsCollection = mongoDatabase.GetCollection<ProductDTO>("Products");
+            _productImagesCollection = mongoDatabase.GetCollection<ProductImageDTO>("ProductImages");
         }
 
         public async Task<IEnumerable<ProductDTO>> GetAllAsync()
@@ -35,6 +37,11 @@ namespace RC.Catalog.API.Data.Repositories
         public async Task CreateAsync(ProductDTO product)
         {
             await _productsCollection.InsertOneAsync(product);
+        }
+
+        public async Task CreateImageAsync(ProductImageDTO product)
+        {
+            await _productImagesCollection.InsertOneAsync(product);
         }
 
         public void Dispose()

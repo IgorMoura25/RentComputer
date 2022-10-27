@@ -6,9 +6,10 @@ namespace RC.Catalog.API.Data.Repositories
 {
     public interface IProductQueryRepository : IRepository<Product>
     {
-        public Task<IEnumerable<ProductDTO>> GetAllAsync();
-        public Task<ProductDTO?> GetByNameAsync(string name);
-        public Task<ProductDTO?> GetByGuidAsync(Guid guid);
-        public Task CreateAsync(ProductDTO product);
+        Task<IEnumerable<ProductDTO>> GetAllAsync();
+        Task<ProductDTO?> GetByNameAsync(string name);
+        Task<ProductDTO?> GetByGuidAsync(Guid guid);
+        Task CreateAsync(ProductDTO product);
+        Task CreateImageAsync(ProductImageDTO product);
     }
 }

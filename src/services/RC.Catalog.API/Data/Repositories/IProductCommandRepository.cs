@@ -6,6 +6,8 @@ namespace RC.Catalog.API.Data.Repositories
     public interface IProductCommandRepository : IRepositoryWithUnitOfWork<Product>
     {
         Product Add(Product model);
-        public Task<Product?> GetByNameAsync(string name);
+        ProductImage AddImage(ProductImage model);
+        Task<Product?> GetByNameAsync(string name);
+        Task<Product?> GetByGuidAsync(Guid guid);
     }
 }
