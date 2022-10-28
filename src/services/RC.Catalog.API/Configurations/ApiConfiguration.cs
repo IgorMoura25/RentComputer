@@ -49,6 +49,8 @@ namespace RC.Catalog.API.Configurations
 
             app.UseHsts();
 
+            app.UseStaticFiles();
+
             app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>

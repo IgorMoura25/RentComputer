@@ -6,6 +6,7 @@ import { Product } from '../models/product.model';
 
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product-list',
@@ -15,6 +16,7 @@ export class ListProductComponent implements OnInit {
 
   public products: Product[];
   errors: any[] = [];
+  imagesUrl: string = environment.productImagesUrl;
 
   constructor(
     private catalogService: CatalogService,

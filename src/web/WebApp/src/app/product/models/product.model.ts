@@ -1,3 +1,5 @@
+import { ProductImage } from "./product-image.model";
+
 export interface Product {
     id: string;
     productGuid: string;
@@ -5,8 +7,7 @@ export interface Product {
     description: string;
     value: number;
     quantity: number;
-    imageName: string;
-    imageBase64: string;
+    images: ProductImage[];
     isActive: boolean;
     createdAt: Date
 }

@@ -13,6 +13,7 @@ import { ToastrService } from "ngx-toastr";
 import { MASKS } from 'ng-brazil';
 import { NgxSpinnerService } from "ngx-spinner";
 import { Dimensions, ImageCroppedEvent, ImageTransform, LoadedImage } from "ngx-image-cropper";
+import { ProductImage } from "../models/product-image.model";
 
 @Component({
     selector: 'app-product-new',
@@ -147,8 +148,10 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
             this.product = Object.assign({}, this.product, this.productForm.value);
 
-            this.product.imageName = this.imageName;
-            this.product.imageBase64 = this.croppedImage.split(',')[1];
+            this.product.images = [<ProductImage>{
+                imageName: this.imageName,
+                imageBase64: this.croppedImage.split(',')[1]
+            }];
 
             this.catalogService.addProduct(this.product)
                 .subscribe({

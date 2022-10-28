@@ -61,7 +61,11 @@ namespace RC.Catalog.API.Application.Commands
 
             _productRepository.AddImage(image);
 
-            _eventList.AddEvent(new ProductImageAddedEvent(image.Id, image.UniversalId, addedProduct.UniversalId, path));
+            var splitArray = path.Split("\\");
+
+            var imageName = splitArray.Last();
+
+            _eventList.AddEvent(new ProductImageAddedEvent(image.Id, image.UniversalId, addedProduct.UniversalId, imageName, path));
 
             var successImage = await _productRepository.UnitOfWork.CommitAsync();
 
@@ -80,7 +84,7 @@ namespace RC.Catalog.API.Application.Commands
         private string? UploadFile(string base64, string imageName)
         {
             var bytes = Convert.FromBase64String(base64);
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "files", ($"{Guid.NewGuid()}-{imageName}"));
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/products", ($"{Guid.NewGuid()}-{imageName}"));
 
             if (File.Exists(path))
             {

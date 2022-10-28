@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace RC.Catalog.API.Data.DTO
 {
@@ -12,6 +11,7 @@ namespace RC.Catalog.API.Data.DTO
         public string? Description { get; set; }
         public decimal Value { get; set; }
         public int Quantity { get; set; }
+        public List<ProductImageDTO>? Images { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
     }

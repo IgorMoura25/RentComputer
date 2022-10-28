@@ -7,7 +7,8 @@ export const environment = {
   staging: false,
   development: true,
   authorizationServerUrl: "https://localhost:7241/",
-  catalogServerUrl: "https://localhost:6003/"
+  catalogServerUrl: "https://localhost:6003/",
+  productImagesUrl: "https://localhost:6003/products/"
 };
 
 /*

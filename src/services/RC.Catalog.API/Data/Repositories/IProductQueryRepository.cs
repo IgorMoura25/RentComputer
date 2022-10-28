@@ -9,7 +9,7 @@ namespace RC.Catalog.API.Data.Repositories
         Task<IEnumerable<ProductDTO>> GetAllAsync();
         Task<ProductDTO?> GetByNameAsync(string name);
         Task<ProductDTO?> GetByGuidAsync(Guid guid);
+        Task<ProductDTO?> UpdateByGuidAsync(Guid guid, ProductDTO newProduct);
         Task CreateAsync(ProductDTO product);
-        Task CreateImageAsync(ProductImageDTO product);
     }
 }
