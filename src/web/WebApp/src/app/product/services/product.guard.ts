@@ -38,6 +38,8 @@ export class ProductGuard implements CanLoad, CanActivate {
         return false;
     }
 
+    // Esse método deve estar refatorado em uma classe base
+    // para que não tenha código duplicado
     hasPermission(route: ActivatedRouteSnapshot): boolean {
         let user = this.localStorage.getUser();
 
