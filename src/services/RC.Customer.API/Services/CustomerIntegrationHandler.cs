@@ -1,32 +1,47 @@
 ﻿using FluentValidation.Results;
 using RC.Core.Messages.IntegrationEvents;
 using RC.Customer.API.Application.Commands;
-using RC.MessageBus.EasyNetQ;
+using RC.MessageBus;
 using RC.MessageBus.Mediator;
+using RC.MessageBus.RabbitMq;
 
 namespace RC.Customer.API.Services
 {
     public class CustomerIntegrationHandler : BackgroundService
     {
         private readonly IEasyNetQBus _bus;
+        private readonly IKafkaMessageBus _kafkaBus;
         private readonly IServiceProvider _serviceProvider;
         private ILogger<CustomerIntegrationHandler> _logger;
 
         public CustomerIntegrationHandler(
             IEasyNetQBus bus,
+            IKafkaMessageBus kafkaBus,
             IServiceProvider serviceProvider,
             ILogger<CustomerIntegrationHandler> logger)
         {
             _bus = bus;
+            _kafkaBus = kafkaBus;
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Executing");
             SetResponder();
-            return Task.CompletedTask;
+
+            await _kafkaBus.ConsumeAsync<UserCreatedIntegrationEvent>("UserCreated", ExecuteKafkaMessageAsync, stoppingToken);
+
+            await Task.CompletedTask;
+        }
+
+        private async Task ExecuteKafkaMessageAsync(UserCreatedIntegrationEvent? message)
+        {
+            // Não faz nada, pois o RabbitMQ já está pegando a mensagem
+            // somente para estudo...
+
+            await Task.CompletedTask;
         }
 
         // Registrando o Respond

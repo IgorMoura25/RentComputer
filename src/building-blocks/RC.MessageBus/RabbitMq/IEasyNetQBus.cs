@@ -1,6 +1,6 @@
 ﻿using EasyNetQ;
 
-namespace RC.MessageBus.EasyNetQ
+namespace RC.MessageBus.RabbitMq
 {
     public interface IEasyNetQBus : IMessageBus
     {

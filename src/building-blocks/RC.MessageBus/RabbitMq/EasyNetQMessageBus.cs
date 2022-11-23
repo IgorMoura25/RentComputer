@@ -5,7 +5,7 @@ using RabbitMQ.Client.Exceptions;
 using RC.Core.Messages;
 using RC.Core.Messages.IntegrationEvents;
 
-namespace RC.MessageBus.EasyNetQ
+namespace RC.MessageBus.RabbitMq
 {
     public class EasyNetQMessageBus : IEasyNetQBus
     {

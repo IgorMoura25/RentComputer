@@ -25,7 +25,8 @@ namespace RC.Identity.API.Configurations
                 .RegisterDataServices(dataBaseSettings)
                 .AddIdentity()
                 .AddJwtSigningCryptographyConfiguration(JwtSigningCryptography.Rsa)
-                .AddMessageBusOrDefault(messageBusSettings.IntegrationConnectionString, MessageBusProviderEnum.EasyNetQ)
+                .AddRabbitMqMessageBus(messageBusSettings.IntegrationConnectionString, MessageBusProviderEnum.EasyNetQ)
+                .AddKafkaMessageBus(new List<string>() { { "localhost:9092" } })
                 .AddMemoryCache()
                 .AddDistributedRedisCache(options =>
                 {

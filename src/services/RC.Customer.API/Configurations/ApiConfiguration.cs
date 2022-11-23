@@ -16,7 +16,9 @@ namespace RC.Customer.API.Configurations
 
             services.AddHostedService<CustomerIntegrationHandler>();
 
-            services.AddMessageBusOrDefault(messageBusSettings.IntegrationConnectionString, MessageBusProviderEnum.EasyNetQ);
+            services.AddRabbitMqMessageBus(messageBusSettings.IntegrationConnectionString, MessageBusProviderEnum.EasyNetQ);
+
+            services.AddKafkaMessageBus(new List<string>() { { "localhost:9092" } });
 
             services.RegisterMediatR();
 

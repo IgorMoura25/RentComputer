@@ -2,7 +2,7 @@
 using RC.Core.Messages;
 using RC.Core.Messages.IntegrationEvents;
 
-namespace RC.MessageBus
+namespace RC.MessageBus.RabbitMq
 {
     public interface IMessageBus : IDisposable
     {

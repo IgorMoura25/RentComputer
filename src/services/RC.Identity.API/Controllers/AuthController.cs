@@ -6,7 +6,8 @@ using RC.Core.Messages.IntegrationEvents;
 using RC.Identity.API.Configurations;
 using RC.Identity.API.CryptoHandlers;
 using RC.Identity.API.Models;
-using RC.MessageBus.EasyNetQ;
+using RC.MessageBus;
+using RC.MessageBus.RabbitMq;
 using RC.WebAPI.Core;
 
 namespace RC.Identity.API.Controllers
@@ -19,7 +20,8 @@ namespace RC.Identity.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ICryptoHandler _cryptoHandler;
         private readonly IOptions<JwtConfigurationOptions> _options;
-        private readonly IEasyNetQBus _messageBus;
+        private readonly IEasyNetQBus _rabbitBus;
+        private readonly IKafkaMessageBus _kafkaBus;
         private readonly ILogger<AuthController> _logger;
 
         public AuthController(
@@ -27,14 +29,16 @@ namespace RC.Identity.API.Controllers
             UserManager<IdentityUser> userManager,
             ICryptoHandler cryptoHandler,
             IOptions<JwtConfigurationOptions> options,
-            IEasyNetQBus messageBus,
+            IEasyNetQBus rabbitBus,
+            IKafkaMessageBus kafkaBus,
             ILogger<AuthController> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _cryptoHandler = cryptoHandler;
             _options = options;
-            _messageBus = messageBus;
+            _rabbitBus = rabbitBus;
+            _kafkaBus = kafkaBus;
             _logger = logger;
         }
 
@@ -60,8 +64,12 @@ namespace RC.Identity.API.Controllers
                 _logger.LogInformation("Starting RPC with others API");
 
                 // Conversa com outras API's avisando que o usuário foi criado
-                var integrationResponse = await _messageBus.RequestIntegrationAsync<UserCreatedIntegrationEvent, ResponseIntegrationMessage>
+                // Rabbit MQ (RPC)
+                var integrationResponse = await _rabbitBus.RequestIntegrationAsync<UserCreatedIntegrationEvent, ResponseIntegrationMessage>
                     (new UserCreatedIntegrationEvent(Guid.Parse(addedUser.Id), addedUser.UserName, addedUser.Email, "57465830060", true, DateTime.UtcNow));
+
+                // Kafka (PubSub)
+                await _kafkaBus.ProduceAsync("UserCreated", new UserCreatedIntegrationEvent(Guid.Parse(addedUser.Id), addedUser.UserName, addedUser.Email, "57465830060", true, DateTime.UtcNow));
 
                 // Se deu algum erro com a criação do cliente, deleta usuário
                 if (!integrationResponse?.ValidationResult?.IsValid ?? false)
