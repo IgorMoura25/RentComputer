@@ -37,9 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.gRPC.Server.API", "src\s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.gRPC.Client.API", "src\services\gRPC-Demo\RC.gRPC.Client.API\RC.gRPC.Client.API.csproj", "{7B20F22B-5775-495A-A045-AF7EAD2376EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductStock", "ProductStock\ProductStock.csproj", "{6BDBE9BB-1749-4F55-A9B6-57BAD3640963}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductStockBase", "ProductStockBase", "{BA0321AB-0FA7-4536-A0C0-8B075B73877B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RC.ProductStock.API", "src\services\RC.ProductStock.API\RC.ProductStock.API.csproj", "{6BDBE9BB-1749-4F55-A9B6-57BAD3640963}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
