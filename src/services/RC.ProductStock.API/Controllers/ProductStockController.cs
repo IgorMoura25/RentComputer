@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProductStock.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/product-stock")]
     [ApiController]
-    public class ProductStock : ControllerBase
+    public class ProductStockController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get()

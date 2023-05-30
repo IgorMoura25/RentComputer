@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "ProductStock": {
+    "RC.ProductStock.API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
