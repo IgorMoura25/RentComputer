@@ -4,8 +4,8 @@ using ProductStock.Models
 
 namespace ProductStock.Controllers
 {
-    [ApiController]
     [Route("api/product-stock")]
+    [ApiController]
     public class ProductStockController : ControllerBase
     {
         private readonly ProductStockContext _contex;
@@ -25,7 +25,7 @@ namespace ProductStock.Controllers
             }
 
             var product = new Product
-            {
+        {
                 Name = productDto.Name,
                 Description = productDto.Description,
                 Value = productDto.Value,
